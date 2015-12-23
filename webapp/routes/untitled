@@ -1,0 +1,10 @@
+var router = express.Router();
+var express = require('express');
+
+
+
+router.get('/register', function(req,res){
+    res.render('register',{title: 'register'});
+});
+
+module.exports = router;

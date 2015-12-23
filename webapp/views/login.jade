@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1= title
+  p Please login to use the Anti-Theft-App
+  form(method="POST")
+    table
+      tr
+        td username
+        td 
+          input(type="text", name="username")
+      tr
+        td password
+        td 
+          input(type="password", name="password")
+    input(type="submit")
+  p you can register here:
+  a(href='/register') register
+
+

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  p You have to register in order to use this site!
+  form(method="POST")
+    table
+      tr
+        td username
+        td
+          input(type="text", name="username")
+      tr
+        td password
+        td
+          input(type="text", name="password")         
+    input(type="submit")
+
