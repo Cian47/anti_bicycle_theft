@@ -27,6 +27,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/login', login);
 app.use('/register', register);
+app.use('/stylesheets', express.static(path.join(__dirname,'stylesheets')));
+app.use('/js', express.static(path.join(__dirname,'js')));
 
 app.get('/', function(req, res){
 	console.log(req.loginCookie);

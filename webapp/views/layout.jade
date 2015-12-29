@@ -2,6 +2,19 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='./stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='./stylesheets/modern-business.css')
+    link(rel='stylesheet', href='./stylesheets/font-awesome/css/font-awesome.min.css')
+    
+    //link(rel='stylesheet', href='./stylesheets/style.css')
   body
-    block content
+      block content
+      nav(class="navbar navbar-inverse navbar-fixed-top")
+        div(class="navbar-header")
+            button(type="button",class="navbar-toggle",data-toggle="collapse",data-target="#bs-example-navbar-collapse-1")
+                span(class="sr-only")
+                span(class="icon-bar")
+                span(class="icon-bar")
+                span(class="icon-bar")
+            a(class="navbar-brand scaletxt",href="/") Bicycle Theft 
+                i(class="fa fa-home")
