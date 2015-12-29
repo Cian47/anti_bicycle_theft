@@ -14,7 +14,7 @@ router.post('/',function(req, res){
 	users.find({username:req.body.username},{},function(e,docs){
 		//check if username is taken
 		if(docs.length!=0){
-			res.end('this username has already been chosen. Please use anther one!');
+			res.end('this username has already been chosen. Please use another one!');
 		}
 		else{
 			req.loginCookie.user = req.body.username;
