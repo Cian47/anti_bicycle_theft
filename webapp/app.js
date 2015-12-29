@@ -36,6 +36,4 @@ app.get('/', function(req, res){
 	else{
 		res.end('you are logged in')
 	}
-})
-
-listen(8080);
+}).listen(8080);
