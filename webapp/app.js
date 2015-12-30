@@ -29,11 +29,14 @@ app.use('/login', login);
 app.use('/register', register);
 
 app.get('/', function(req, res){
-	console.log(req.loginCookie);
 	if(!req.loginCookie.username){
 		res.redirect('/login');
 	}
 	else{
-		res.end('you are logged in')
+
+		console.log('jo');
+		res.render('index',{username:req.loginCookie.username});
 	}
-}).listen(8080);
+});
+
+app.listen(8080);
