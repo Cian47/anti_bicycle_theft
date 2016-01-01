@@ -31,6 +31,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.use('/login', login);
+app.use('/stylesheets', express.static(path.join(__dirname,'stylesheets')));
+app.use('/js', express.static(path.join(__dirname,'js')));
+
 //check all incoming request for login status. Redirect if not logged in.
 app.all('*', function(req, res, next){
 	//check all incoming request for login status. Redirect if not logged in.
@@ -41,14 +44,11 @@ app.all('*', function(req, res, next){
 		next();
 	};
 })
-
+app.use('/', index);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/register', register);
 app.use('/bike', bike);
-app.use('/stylesheets', express.static(path.join(__dirname,'stylesheets')));
-app.use('/js', express.static(path.join(__dirname,'js')));
-app.use('/', index);
 
 
 app.listen(8080);
