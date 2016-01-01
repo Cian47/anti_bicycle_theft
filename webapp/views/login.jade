@@ -4,9 +4,17 @@ block content
   div(class="container")
       h1= title
       p Please login to use the Anti-Theft-App 
-            include form.jade
-              button(type="submit", class="btn btn-primary") Login
-      p you can register here:
-      a(href='/register') register
+      form(method="POST")
+        div(class="control-group form-group")
+          div(class="controls")
+            label username
+            input(type="text", name="username", class="form-control")
+        div(class="control-group form-group")
+          div(class="controls")
+            label password
+            input(type="password", name="password", class="form-control")
+        button(type="submit", class="btn btn-primary") Login      
+        p you can register here:
+        a(href='/register') register
 
 

@@ -5,9 +5,13 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 
 
+//include routes
+var index = require('./routes/index');
+var login = require('./routes/login');
+var logout = require('./routes/logout');
+var register = require('./routes/register');
+var bike = require('./routes/bike');
 
-var login = require('./routes/login')
-var register = require('./routes/register')
 
 var app = express();
 
@@ -25,20 +29,26 @@ app.use(clientSessions({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/login', login);
-app.use('/register', register);
-app.use('/stylesheets', express.static(path.join(__dirname,'stylesheets')));
-app.use('/js', express.static(path.join(__dirname,'js')));
 
-app.get('/', function(req, res){
+app.use('/login', login);
+//check all incoming request for login status. Redirect if not logged in.
+app.all('*', function(req, res, next){
+	//check all incoming request for login status. Redirect if not logged in.
 	if(!req.loginCookie.username){
 		res.redirect('/login');
 	}
 	else{
+		next();
+	};
+})
 
-		console.log('jo');
-		res.render('index',{username:req.loginCookie.username});
-	}
-});
+app.use('/login', login);
+app.use('/logout', logout);
+app.use('/register', register);
+app.use('/bike', bike);
+app.use('/stylesheets', express.static(path.join(__dirname,'stylesheets')));
+app.use('/js', express.static(path.join(__dirname,'js')));
+app.use('/', index);
+
 
 app.listen(8080);

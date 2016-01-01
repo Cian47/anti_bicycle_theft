@@ -1,7 +1,28 @@
 extends layout
-
 block content
-	p You are logged in as #{username}
-	p actions:
-	a(href="/bike/registerNew")
-		| register new bike
+  div(class="container")
+    p Your bikes:
+      table(class="table")
+        tr
+          th Nickname
+          th Status
+          th Change Status
+        each bike in bikes
+          tr
+            td=bike.nickname
+            if bike.stolen
+              td stolen
+            else
+              td not stolen
+            if bike.stolen
+              td
+                form(action="/", method="POST", id="#{bike.nickname}")
+                  input(type="hidden", name="bikename", value="#{bike.nickname}")
+                  input(type="hidden", name="changeTo", value="found")
+                button(type="submit", form="#{bike.nickname}" class="btn btn-primary btn-sm") Mark as found
+            else
+              td
+                form(action="/", method="POST", id="#{bike.nickname}")
+                  input(type="hidden", name="bikename", value="#{bike.nickname}")
+                  input(type="hidden", name="changeTo", value="stolen")
+                button(type="submit", form="#{bike.nickname}" class="btn btn-primary btn-sm") Mark as stolen

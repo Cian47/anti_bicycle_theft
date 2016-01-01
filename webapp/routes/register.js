@@ -5,7 +5,6 @@ var monk = require('monk');
 var db = monk('localhost:27017/bikeapp');
 var users = db.get('users');
 
-
 router.get('/', function(req,res){
     res.render('register',{title: 'register'});
 });

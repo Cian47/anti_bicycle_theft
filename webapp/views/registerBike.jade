@@ -1,0 +1,17 @@
+extends layout
+block content
+  script(src="/js/parsley.js")
+  script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+
+  div(class="container")
+      h1=title
+      form(method="POST", data-parsley-validate)
+        div(class="control-group form-group")
+          div(class="controls")
+            label Nickname
+            input(type="textarea", name="nickname", class="form-control", minlength="5", maxlength="15", data-parsley-minlength-message="Your nickname is too short", placeholder="You Bike's Nickname")
+        div(class="control-group form-group")
+          div(class="controls")
+            label Color
+            input(type="text", name="color", class="form-control", required)
+        button(type="submit", class="btn btn-primary") Register bike
