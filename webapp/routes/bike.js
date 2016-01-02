@@ -36,7 +36,7 @@ router.get('/showBike',function(req,res){
 	
 		users.findOne({username:username, bikes:{$elemMatch:{nickname:bikeName}}},{fields: {'bikes.$':1}},function(e,user){
 			positions.find({user_id:user._id, bike_name:user.bikes[0].nickname}, function(e,pos){
-
+				if(pos.length>0){
 				//calculate marker string for map
 				var labels=['A','B','C','D','E'];
 				var markerString = "";
@@ -47,6 +47,10 @@ router.get('/showBike',function(req,res){
 				}
 				console.log(markerString)
 				res.render('showBike', {username:username, bikeName:bikeName, positions:pos, markerString:markerString})
+				}
+				else{
+					res.redirect('/');
+				}
 			});
 		});
 
