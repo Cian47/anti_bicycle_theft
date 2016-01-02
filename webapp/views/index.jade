@@ -10,7 +10,8 @@ block content
         th Change Status
       each bike in bikes
         tr
-          td=bike.nickname
+          td
+            a(href="/bike/showBike?nickname=#{bike.nickname}") #{bike.nickname}
           if bike.stolen
             td stolen
           else

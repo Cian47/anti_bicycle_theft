@@ -4,6 +4,7 @@ var router = express.Router();
 var monk = require('monk');
 var db = monk('localhost:27017/bikeapp');
 var users = db.get('users');
+var positions = db.get('positions');
 
 router.get('/registerNew', function(req, res){
 	var username = req.loginCookie.username;
@@ -13,19 +14,43 @@ router.get('/registerNew', function(req, res){
 
 router.post('/registerNew',function(req,res){
 	var username = req.loginCookie.username;
+	var bikeName = req.body.nickname;
+	var color = req.body.color;
 	users.find({username:username},{}, function(e, docs){
-		for(bike of docs[0].bikes){
-			users.find({username:username, bikes:{$elemMatch:{nickname:req.body.nickname}}},{},function(e,docs){
-				if(docs.length>0){
-					console.log('already exists');
-				}
-				else{
-					users.update({username:username},{$push:{bikes:{nickname:req.body.nickname, color:req.body.color}}})
-				}
-			});
-		}
+		users.find({username:username, bikes:{$elemMatch:{nickname:bikeName}}},{},function(e,docs){
+			if(docs.length>0){
+				console.log('already exists');
+			}
+			else{
+				users.update({username:username},{$push:{bikes:{nickname:bikeName, color:color, stolen:false}}})
+			}
+		});	
 	});
-	res.redirect('registerNew');
+	res.redirect('/');
+});
+
+router.get('/showBike',function(req,res){
+	var username = req.loginCookie.username;
+	var bikeName = req.query.nickname;
+	console.log(bikeName);
+	
+		users.findOne({username:username, bikes:{$elemMatch:{nickname:bikeName}}},{fields: {'bikes.$':1}},function(e,user){
+			positions.find({user_id:user._id, bike_name:user.bikes[0].nickname}, function(e,pos){
+
+				//calculate marker string for map
+				var labels=['A','B','C','D','E'];
+				var markerString = "";
+				var count=0;
+				for(position of pos){
+					markerString+="&markers=color:blue%7Clabel:"+labels[count%labels.length]+"%7C"+position.lat+","+position.long
+					count+=1;
+				}
+				console.log(markerString)
+				res.render('showBike', {username:username, bikeName:bikeName, positions:pos, markerString:markerString})
+			});
+		});
+
+
 });
 
 module.exports = router;
