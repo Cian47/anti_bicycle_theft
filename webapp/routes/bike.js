@@ -33,6 +33,7 @@ router.get('/showBike',function(req,res){
 	var username = req.loginCookie.username;
 	var bikeName = req.query.nickname;	
 	users.findOne({username:username, bikes:{$elemMatch:{nickname:bikeName}}},{fields: {'bikes.$':1}},function(e,user){
+		if(user){
 		positions.find({user_id:user._id, bike_name:user.bikes[0].nickname}, function(e,pos){
 			if(pos.length>0){
 			//calculate marker string for map
@@ -49,6 +50,10 @@ router.get('/showBike',function(req,res){
 				res.redirect('/');
 			}
 		});
+	}
+	else{
+		res.redirect('/');
+	}
 	});
 
 
