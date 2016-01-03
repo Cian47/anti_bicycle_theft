@@ -5,6 +5,8 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 
 
+
+
 //include routes
 var index = require('./routes/index');
 var login = require('./routes/login');
@@ -15,6 +17,7 @@ var bike = require('./routes/bike');
 
 var app = express();
 
+app.locals.moment = require('moment');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(logger('dev'));

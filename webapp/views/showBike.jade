@@ -10,8 +10,8 @@ block content
           th Longitude
         each position in positions
           tr
-            td #{position.time}
+            td #{moment(position.time).format("DD.MM.YY HH:mm") }
             td #{position.lat}
             td #{position.long}
     div(class="col-md-6")
-      img(src="https://maps.googleapis.com/maps/api/staticmap?center=#{positions[0].lat},#{positions[0].long}&zoom=15&size=400x400#{markerString}&key=AIzaSyB2_DlPkTUMRyzbPn-8VZMiKpfJpJ2wbBA")
+      img(src="https://maps.googleapis.com/maps/api/staticmap?center=#{positions[positions.length-1].lat},#{positions[positions.length-1].long}&zoom=15&size=400x400#{markerString}&key=AIzaSyB2_DlPkTUMRyzbPn-8VZMiKpfJpJ2wbBA")

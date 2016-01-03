@@ -11,7 +11,12 @@ block content
       each bike in bikes
         tr
           td
-            a(href="/bike/showBike?nickname=#{bike.nickname}") #{bike.nickname}
+            span(class="badge") #{bike.numberOfLogs}
+            |  
+            if bike.numberOfLogs != 0
+              a(href="/bike/showBike?nickname=#{bike.nickname}") #{bike.nickname}
+            else
+              | #{bike.nickname}
           if bike.stolen
             td stolen
           else
