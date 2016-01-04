@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var util = require('util');
 
 var monk = require('monk');
 var db = monk('localhost:27017/bikeapp');
@@ -10,6 +11,13 @@ router.get('/', function(req,res){
 });
 
 router.post('/',function(req, res){
+	//Validation
+	req.checkBody('username','Username is too short').notEmpty().len(5,20);
+	var errors = req.validationErrors();
+	if (errors) {
+    res.status('There have been validation errors: ' + util.inspect(errors), 400);
+    return;
+  	}
 	users.find({username:req.body.username},{},function(e,docs){
 		//check if username is taken
 		if(docs.length!=0){

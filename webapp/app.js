@@ -3,8 +3,7 @@ var clientSessions = require('client-sessions');
 var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
-
-
+var  expressValidator = require('express-validator');
 
 
 //include routes
@@ -30,9 +29,10 @@ app.use(clientSessions({
 }));
 
 app.use(bodyParser.json());
+app.use(expressValidator());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-
+app.use('/register', register);
 app.use('/login', login);
 app.use('/stylesheets', express.static(path.join(__dirname,'stylesheets')));
 app.use('/js', express.static(path.join(__dirname,'js')));
@@ -50,7 +50,6 @@ app.all('*', function(req, res, next){
 app.use('/', index);
 app.use('/login', login);
 app.use('/logout', logout);
-app.use('/register', register);
 app.use('/bike', bike);
 
 

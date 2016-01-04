@@ -8,7 +8,7 @@ var users = db.get('users');
 //call login page
 router.get('/', function(req,res,next){
 		//res.end(JSON.stringify({title:'login page'}));
-	res.render('login',{title: 'login'});
+	res.render('login',{title: 'login',failedLogin:false});
 });
 
 
@@ -16,7 +16,7 @@ router.get('/', function(req,res,next){
 router.post('/',function(req, res){
 	users.find({username:req.body.username},{}, function(e, docs){
 		if(docs.length==0 || docs[0].password != req.body.password){
-			res.end('This user does not exist or the password is wrong')
+			res.render('login',{title:'login', failedLogin:true});
 			}
 		else{
 			req.loginCookie.username = req.body.username;

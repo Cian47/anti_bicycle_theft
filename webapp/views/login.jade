@@ -3,16 +3,17 @@ extends layout
 block content
   div(class="container")
       h1= title
-      p Please login to use the Anti-Theft-App 
-      form(method="POST")
+      if failedLogin
+        div(class="alert alert-danger") Invalid username or password!
+      form(method="POST", data-parsley-validate)
         div(class="control-group form-group")
           div(class="controls")
             label username
-            input(type="text", name="username", class="form-control")
+            input(type="text", name="username", class="form-control", data-parsley-required)
         div(class="control-group form-group")
           div(class="controls")
             label password
-            input(type="password", name="password", class="form-control")
+            input(type="password", name="password", class="form-control", data-parsley-required)
         button(type="submit", class="btn btn-primary") Login      
         p you can register here:
         a(href='/register') register

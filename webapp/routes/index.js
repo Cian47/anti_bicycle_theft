@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
+var util = require('util');
 var monk = require('monk');
 var db = monk('localhost:27017/bikeapp');
 var users = db.get('users');
