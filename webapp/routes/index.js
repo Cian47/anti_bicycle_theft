@@ -10,17 +10,22 @@ router.get('/', function(req,res){
 	users.findOne({username:username}, function(e,user){
 		var bikes = user.bikes;
 		//Create an array holding the amount of logged locations per bike so they can be shown in a badge
-		var count = 1;
-		bikes.forEach(function(bike){
-			positions.find({user_id:user._id, bike_name:bike.nickname},{}, function(e,docs){
-				bikes[bikes.indexOf(bike)].numberOfLogs = docs.length;
-				if(count==bikes.length){
-					res.render('index', {username: username, bikes:bikes});
-				}
-				else
-					count+=1;
+		if(bikes!=undefined){
+			var count = 1;
+			bikes.forEach(function(bike){
+				positions.find({user_id:user._id, bike_name:bike.nickname},{}, function(e,docs){
+					bikes[bikes.indexOf(bike)].numberOfLogs = docs.length;
+					if(count==bikes.length){
+						res.render('index', {username: username, bikes:bikes});
+					}
+					else
+						count+=1;
+				});
 			});
-		});
+		}
+		else{
+			res.redirect('/bike/registerNew');
+		}
 	});
 	
 });

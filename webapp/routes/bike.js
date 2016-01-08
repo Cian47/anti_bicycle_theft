@@ -20,7 +20,6 @@ router.post('/registerNew',function(req,res){
 	users.find({username:username},{}, function(e, docs){
 		users.find({username:username, bikes:{$elemMatch:{nickname:bikeName}}},{},function(e,docs){
 			if(docs.length>0){
-				console.log('already exists');
 			}
 			else{
 				users.update({username:username},{$push:{bikes:{nickname:bikeName, color:color, stolen:false, _id: mongodb.ObjectID()}}})
