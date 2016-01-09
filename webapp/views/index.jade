@@ -1,35 +1,47 @@
+link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet" type="text/css")
+link(href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css")
+
 extends layout
 block content
-  div(class="container")
-    h1 Your bikes
-    br
-    table(class="table")
-      tr
-        th Nickname
-        th Status
-        th Change Status
-      each bike in bikes
-        tr
-          td
-            span(class="badge") #{bike.numberOfLogs}
-            |  
-            if bike.numberOfLogs != 0
-              a(href="/bike/showBike?nickname=#{bike.nickname}") #{bike.nickname}
-            else
-              | #{bike.nickname}
-          if bike.stolen
-            td stolen
-          else
-            td not stolen
-          if bike.stolen
-            td
-              form(action="/", method="POST", id="#{bike.nickname}")
-                input(type="hidden", name="bikename", value="#{bike.nickname}")
-                input(type="hidden", name="changeTo", value="found")
-              button(type="submit", form="#{bike.nickname}" class="btn btn-primary btn-sm") Mark as found
-          else
-            td
-              form(action="/", method="POST", id="#{bike.nickname}")
-                input(type="hidden", name="bikename", value="#{bike.nickname}")
-                input(type="hidden", name="changeTo", value="stolen")
-              button(type="submit", form="#{bike.nickname}" class="btn btn-primary btn-sm") Mark as stolen
+  div(class="splash")
+    div(class="splashfixer")
+    if bikes
+      div(class="container white-background")
+        h1 Your bikes
+        br
+        table(class="table")
+          tr
+            th Nickname
+            th Status
+            th Change Status
+          each bike in bikes
+            tr
+              td
+                span(class="badge") #{bike.numberOfLogs}
+                |  
+                if bike.numberOfLogs != 0
+                  a(href="/bike/showBike?nickname=#{bike.nickname}") #{bike.nickname}
+                else
+                  | #{bike.nickname}
+              if bike.stolen
+                td stolen
+              else
+                td not stolen
+              if bike.stolen
+                td
+                  form(action="/", method="POST", id="#{bike.nickname}")
+                    input(type="hidden", name="bikename", value="#{bike.nickname}")
+                    input(type="hidden", name="changeTo", value="found")
+                  button(type="submit", form="#{bike.nickname}" class="btn btn-primary btn-sm") Mark as found
+              else
+                td
+                  form(action="/", method="POST", id="#{bike.nickname}")
+                    input(type="hidden", name="bikename", value="#{bike.nickname}")
+                    input(type="hidden", name="changeTo", value="stolen")
+                  button(type="submit", form="#{bike.nickname}" class="btn btn-primary btn-sm") Mark as stolen
+    else
+      div(class="spash-content")
+        h1 You haven't registered any bikes yet!
+        h2 Click here to register a new bike:
+        br
+        button(class="btn btn-primary" onclick="location.href='/bike/registerNew'") Register new bike >>

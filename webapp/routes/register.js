@@ -13,15 +13,20 @@ router.get('/', function(req,res){
 router.post('/',function(req, res){
 	//Validation
 	req.checkBody('username','Username is too short').notEmpty().len(5,20);
+
+
 	var errors = req.validationErrors();
 	if (errors) {
     res.status('There have been validation errors: ' + util.inspect(errors), 400);
     return;
+
+    //end validation
   	}
 	users.find({username:req.body.username},{},function(e,docs){
-		//check if username is taken
+		var errMessage;
 		if(docs.length!=0){
-			res.end('this username has already been chosen. Please use another one!');
+			errMessage='this username has already been chosen. Please use another one!'
+			res.render('register',{title:'register', error:errMessage});
 		}
 		else{
 			req.loginCookie.user = req.body.username;

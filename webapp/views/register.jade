@@ -1,17 +1,23 @@
 extends layout
 
 block content            
-  div(class="container")
-      h1= title
-      p You have to register in order to use this site!   
-        
-      form(method="POST", data-validate="parsley")
-        div(class="control-group form-group")
-          div(class="controls")
-            label username
-            input(type="text", name="username", class="form-control", data-minlength="5", data-maxlength="20" , parsley-min-message="Your username must be at least 5 characters long")
-        div(class="control-group form-group")
-          div(class="controls")
-            label password
-            input(type="password", name="password", class="form-control")
-        button(type="submit", class="btn btn-primary") Register
+  div(class="splash")
+    div(class="container")
+      div(class="row")
+        div(class="col-md-3")
+        div(class="col-md-6 formarea white-background")
+          h1= title
+          p You have to register in order to use this site!   
+          if error
+            div(class="alert alert-danger") #{error}
+          form(method="POST", data-validate="parsley")
+            div(class="control-group form-group")
+              div(class="controls")
+                label username
+                input(type="text", name="username", class="form-control", data-minlength="5", data-maxlength="20" , parsley-min-message="Your username must be at least 5 characters long")
+            div(class="control-group form-group")
+              div(class="controls")
+                label password
+                input(type="password", name="password", class="form-control")
+            button(type="submit", class="btn btn-primary") Register
+        div(class="col-md-3")

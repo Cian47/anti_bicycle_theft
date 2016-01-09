@@ -1,14 +1,19 @@
 extends layout
 block content
-  div(class="container")
-      h1 Register a new bike
-      form(method="POST", data-parsley-validate)
-        div(class="control-group form-group")
-          div(class="controls")
-            label Nickname
-            input(type="textarea", name="nickname", class="form-control", minlength="5", maxlength="15", data-parsley-minlength-message="Your nickname is too short", placeholder="You Bike's Nickname")
-        div(class="control-group form-group")
-          div(class="controls")
-            label Color
-            input(type="text", name="color", class="form-control", required)
-        button(type="submit", class="btn btn-primary") Register bike
+  div(class="splash")
+    div(class="container")
+      div(class="row")
+        div(class="col-md-3")
+        div(class="col-md-6 formarea white-background")
+          h1 Register a new bike
+          form(method="POST", data-parsley-validate)
+            div(class="control-group form-group")
+              div(class="controls")
+                label Nickname
+                input(type="textarea", name="nickname", class="form-control", minlength="5", maxlength="15", data-parsley-minlength-message="Your nickname is too short", placeholder="You Bike's Nickname")
+            div(class="control-group form-group")
+              div(class="controls")
+                label Color
+                input(type="text", name="color", class="form-control", required)
+            button(type="submit", class="btn btn-primary") Register bike
+        div(class="col-md-3")

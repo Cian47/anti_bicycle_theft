@@ -24,7 +24,7 @@ router.get('/', function(req,res){
 			});
 		}
 		else{
-			res.redirect('/bike/registerNew');
+			res.render('index',{username:username});
 		}
 	});
 	

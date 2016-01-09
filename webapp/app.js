@@ -35,6 +35,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/register', register);
 app.use('/login', login);
 app.use('/stylesheets', express.static(path.join(__dirname,'stylesheets')));
+app.use('/images', express.static(path.join(__dirname,'images')));
 app.use('/js', express.static(path.join(__dirname,'js')));
 
 //check all incoming request for login status. Redirect if not logged in.

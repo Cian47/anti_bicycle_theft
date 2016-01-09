@@ -4,3 +4,32 @@ body{
 .navbar-text{
 	float:left;
 }
+#noBikesSplash{
+}
+.splash{
+	background-image: url('../images/flatRack.png');
+	background-size: cover;
+	margin-top: -20px;
+	height: calc(100% + 20px);
+	color: black;
+
+}
+.spash-content{
+	padding-top: 10%;
+	padding-left: 10%;
+}
+h1, h2,h3{
+			font-family: 'Montserrat', sans-serif;	
+}
+.formarea{
+	margin-top: 20px;
+	padding-bottom: 20px;
+}
+.white-background{
+	background-color: white;
+	border-radius: 10px 10px 10px 10px;
+
+}
+.splashfixer{
+	height: 20px;
+}
