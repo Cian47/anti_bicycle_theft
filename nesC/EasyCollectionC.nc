@@ -15,7 +15,7 @@ implementation {
   bool sendBusy = FALSE;
 
   typedef nx_struct EasyCollectionMsg {
-    nx_uint16_t data;
+    nx_uint16_t data[20];
   } EasyCollectionMsg;
 
   event void Boot.booted() {
@@ -39,7 +39,8 @@ implementation {
   void sendMessage() {
     EasyCollectionMsg* msg =
       (EasyCollectionMsg*)call Send.getPayload(&packet, sizeof(EasyCollectionMsg));
-    msg->data = 0xAAAA;
+    msg->data[0] = 0xABCD;
+    msg->data[2] = 0xFAFA;
     
     if (call Send.send(&packet, sizeof(EasyCollectionMsg)) != SUCCESS) 
       call Leds.led0On();
