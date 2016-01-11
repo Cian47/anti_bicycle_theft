@@ -1,3 +1,5 @@
+#include "DataMsg.h"
+
 configuration BeaconAppC {
 }
 implementation {
@@ -22,7 +24,7 @@ implementation {
     components DisseminationC;
   EasyDisseminationC.DisseminationControl -> DisseminationC;
 
-  components new DisseminatorC(uint16_t, 0x1234) as Diss16C;
+  components new DisseminatorC(EasyDisseminationMsg, 0x1234) as Diss16C;
   EasyDisseminationC.Value -> Diss16C;
   EasyDisseminationC.Update -> Diss16C;
   EasyDisseminationC.Leds -> LedsC;

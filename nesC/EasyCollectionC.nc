@@ -1,4 +1,5 @@
 #include <Timer.h>
+#include "DataMsg.h"
 
 module EasyCollectionC {
   uses interface Boot;
@@ -14,9 +15,6 @@ implementation {
   message_t packet;
   bool sendBusy = FALSE;
 
-  typedef nx_struct EasyCollectionMsg {
-    nx_uint16_t data[20];
-  } EasyCollectionMsg;
 
   event void Boot.booted() {
     call RadioControl.start();
@@ -27,10 +25,10 @@ implementation {
       call RadioControl.start();
     else {
       call RoutingControl.start();
-      if (TOS_NODE_ID == 1) 
+      if (TOS_NODE_ID == 8) 
 	call RootControl.setRoot();
       else
-	call Timer.startPeriodic(2000);
+	call Timer.startPeriodic(10000);
     }
   }
 

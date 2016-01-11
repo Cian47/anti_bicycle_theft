@@ -259,6 +259,8 @@ implementation
 	}
       else
 	dropBlink();
+	if (msg->data[1]==0x05)
+		dropBlink();
 
     if (reflectToken) {
       //call UartTokenReceive.ReflectToken(Token);
