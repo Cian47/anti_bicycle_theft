@@ -80,8 +80,6 @@ configuration BaseStationC {
 implementation {
   components MainC, BaseStationP, LedsC;
   components ActiveMessageC as Radio, SerialActiveMessageC as Serial;
-    components EasyCollectionC;
-    components EasyDisseminationC;
   
   MainC.Boot <- BaseStationP;
 
