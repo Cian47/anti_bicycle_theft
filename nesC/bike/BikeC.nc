@@ -110,12 +110,16 @@ implementation {
 
 
   event void Value.changed() {
+    uint8_t i;
     const EasyDisseminationMsg* newVal = call Value.get();
     // show new counter in leds
     pkt = *newVal;
-    if (pkt.bikes[0]==0xABCF)
-    	call Leds.led1Toggle();
-    	//STOLEN?? YES? => call GpsControl.start();
-    //post ShowCounter();
+    for (i=0;i<MAXBIKES;i++)
+    {
+        if (pkt.bikes[i]==secret())
+        	call Leds.led1Toggle();
+        	//STOLEN?? YES? => call GpsControl.start();
+        //post ShowCounter();
+    }
   }
 }
