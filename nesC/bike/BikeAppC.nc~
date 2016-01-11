@@ -3,7 +3,7 @@ configuration BikeAppC {
 implementation {
   components MainC;
   components LedsC;
-  components BikeC as App;
+  components Lea4aTestC as App;
   components Lea4aGpsC as Gps;
   
   App.Boot -> MainC;
