@@ -1,20 +1,46 @@
 #include <math.h>
 #include "Lea4a.h"
+#include "DataMsg.h"
 
 #define P_LAT 51.556147 //Center Coordinates, red LED will light up
 #define P_LON  9.948392 //if going more than defined distance away in either direction
 #define DIST 0.1  //in kilometres
 
-module Lea4aTestC {
+module BikeC {
   uses interface Boot;
   uses interface Leds;
   uses interface SplitControl as GpsControl;
   uses interface GpsMsg;
+  
+  
+  uses interface SplitControl as RadioControl;
+  uses interface StdControl as DisseminationControl;
+  uses interface DisseminationValue<EasyDisseminationMsg> as Value;
+  uses interface DisseminationUpdate<EasyDisseminationMsg> as Update;
+  
+  //COLLECT
+  uses interface Receive;
+  uses interface Send;
+  
+  
+  //localtime:
+  uses interface LocalTime<TMicro> as LocalTimeMicro;
+  
 }
 implementation {
+    uint8_t stolen=0x00;
+    EasyDisseminationMsg pkt;
+    message_t packet;
+    bool sendBusy = FALSE;
+    
+    int secret()
+    {
+        return TOS_NODE_ID*7+9;
+    }
 	
 	event void Boot.booted() {
-		call GpsControl.start();
+	    call RadioControl.start();
+		//call GpsControl.start();
 	}
 	
 	event void GpsControl.startDone(error_t error) {
@@ -40,4 +66,56 @@ implementation {
 			}
 			call GpsMsg.Listen(TRUE);
 	}
+	
+	/* DUMP GPS HERE */
+	void sendMessage() {
+    EasyCollectionMsg* msg =
+      (EasyCollectionMsg*)call Send.getPayload(&packet, sizeof(EasyCollectionMsg));
+    msg->nodeid[0] = 0xABCD;
+    msg->time[0] = (uint32_t)((call LocalTimeMicro.get())/1000000);
+    msg->lat[1] = 0xFEBBBBFA;
+    
+    if (call Send.send(&packet, sizeof(EasyCollectionMsg)) != SUCCESS) 
+      call Leds.led0On();
+    else 
+      sendBusy = TRUE;
+  }
+  
+  event void Send.sendDone(message_t* m, error_t err) {
+    if (err != SUCCESS) 
+      call Leds.led0On();
+    sendBusy = FALSE;
+  }
+  
+  event message_t* 
+  Receive.receive(message_t* msg, void* payload, uint8_t len) {
+    call Leds.led1Toggle();    
+    return msg;
+  }
+	
+	event void RadioControl.startDone(error_t err) {
+    if (err != SUCCESS) 
+      call RadioControl.start();
+    else {
+      call DisseminationControl.start();
+      //counter = 0;
+      //if ( TOS_NODE_ID  == 8 ) 
+      //  call Timer.startPeriodic(2000);
+      //if (TOS_NODE_ID == 8) 
+	  //  call RootControl.setRoot();
+    }
+  }
+
+  event void RadioControl.stopDone(error_t err) {}
+
+
+  event void Value.changed() {
+    const EasyDisseminationMsg* newVal = call Value.get();
+    // show new counter in leds
+    pkt = *newVal;
+    if (pkt.bikes[0]==0xABCF)
+    	call Leds.led1Toggle();
+    	//STOLEN?? YES? => call GpsControl.start();
+    //post ShowCounter();
+  }
 }
