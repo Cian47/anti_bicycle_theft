@@ -46,4 +46,11 @@ implementation {
   EasyCollectionC.Receive -> Collector.Receive[0xee];
     
     
+    
+  components CounterMicro32C;
+  components new CounterToLocalTimeC(TMicro) as CounterToLocalTimeMicroC;
+  CounterToLocalTimeMicroC.Counter -> CounterMicro32C;
+  EasyCollectionC.LocalTimeMicro -> CounterToLocalTimeMicroC;
+
+    
 }
