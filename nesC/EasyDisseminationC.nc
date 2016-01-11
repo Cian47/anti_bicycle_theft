@@ -39,7 +39,7 @@ implementation {
     else {
       call DisseminationControl.start();
       counter = 0;
-      if ( TOS_NODE_ID  == 1 ) 
+      if ( TOS_NODE_ID  == 10 ) 
         call Timer.startPeriodic(2000);
     }
   }
