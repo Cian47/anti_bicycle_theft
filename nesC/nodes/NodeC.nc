@@ -1,6 +1,6 @@
 #include <Timer.h>
 
-module BeaconC {
+module NodeC {
   uses interface Boot;
   uses interface Leds;
 }

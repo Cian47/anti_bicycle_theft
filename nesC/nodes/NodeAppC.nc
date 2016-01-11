@@ -1,21 +1,21 @@
 #include "DataMsg.h"
 
-configuration BeaconAppC {
+configuration NodeAppC {
 }
 implementation {
     components MainC;
     components EasyCollectionC;
     components EasyDisseminationC;
     
-    components BeaconC;
+    components NodeC;
     EasyDisseminationC.Boot -> MainC;
     
     components LedsC;
   components ActiveMessageC;
     
-    BeaconC.Boot -> MainC;
-    BeaconC.Leds -> LedsC;
-  //BeaconC.RadioControl -> ActiveMessageC;
+    NodeC.Boot -> MainC;
+    NodeC.Leds -> LedsC;
+  //NodeC.RadioControl -> ActiveMessageC;
     
 
   EasyDisseminationC.RadioControl -> ActiveMessageC;
