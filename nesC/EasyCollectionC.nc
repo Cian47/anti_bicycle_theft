@@ -10,6 +10,9 @@ module EasyCollectionC {
   uses interface Timer<TMilli>;
   uses interface RootControl;
   uses interface Receive;
+  
+  //localtime:
+  uses interface LocalTime<TMicro> as LocalTimeMicro;
 }
 implementation {
   message_t packet;
@@ -38,6 +41,7 @@ implementation {
     EasyCollectionMsg* msg =
       (EasyCollectionMsg*)call Send.getPayload(&packet, sizeof(EasyCollectionMsg));
     msg->nodeid[0] = 0xABCD;
+    msg->time[0] = (uint32_t)((call LocalTimeMicro.get())/1000000);
     msg->lat[1] = 0xFEBBBBFA;
     
     if (call Send.send(&packet, sizeof(EasyCollectionMsg)) != SUCCESS) 
