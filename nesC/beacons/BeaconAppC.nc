@@ -13,7 +13,7 @@ implementation {
     
     BeaconC.Boot -> MainC;
     BeaconC.Leds -> LedsC;
-  BeaconC.RadioControl -> ActiveMessageC;
+  //BeaconC.RadioControl -> ActiveMessageC;
     
 
   EasyDisseminationC.RadioControl -> ActiveMessageC;
