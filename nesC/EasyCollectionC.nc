@@ -37,8 +37,8 @@ implementation {
   void sendMessage() {
     EasyCollectionMsg* msg =
       (EasyCollectionMsg*)call Send.getPayload(&packet, sizeof(EasyCollectionMsg));
-    msg->data[0] = 0xABCD;
-    msg->data[2] = 0xFAFA;
+    msg->nodeid[0] = 0xABCD;
+    msg->lat[1] = 0xFEBBBBFA;
     
     if (call Send.send(&packet, sizeof(EasyCollectionMsg)) != SUCCESS) 
       call Leds.led0On();
