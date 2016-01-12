@@ -73,73 +73,62 @@
  * @author David Gay
  * @author Philip Levis
  * @date August 10 2005
+ * @modified by Kevin Freeman
  */
 
-configuration BaseStationC {
+configuration BaseStationC 
+{
 }
-implementation {
-  components MainC, BaseStationP, LedsC;
-  components ActiveMessageC as Radio, SerialActiveMessageC as Serial;
-    components EasyCollectionC;
+implementation 
+{
+    components MainC, BaseStationP, LedsC;
+    components ActiveMessageC as Radio, SerialActiveMessageC as Serial;
+    components ActiveMessageC;
+    
     components EasyDisseminationC;
-  
-  MainC.Boot <- BaseStationP;
-
-  BaseStationP.RadioControl -> Radio;
-  BaseStationP.SerialControl -> Serial;
-  
-  BaseStationP.UartSend -> Serial;
-  BaseStationP.UartReceive -> Serial.Receive;
-  BaseStationP.UartPacket -> Serial;
-  BaseStationP.UartAMPacket -> Serial;
-  
-  BaseStationP.RadioSend -> Radio;
-  BaseStationP.RadioReceive -> Radio.Receive;
-  BaseStationP.RadioSnoop -> Radio.Snoop;
-  BaseStationP.RadioPacket -> Radio;
-  BaseStationP.RadioAMPacket -> Radio;
-  
-  BaseStationP.Leds -> LedsC;
-  
-  
-  
-    EasyDisseminationC.Boot -> MainC;
-    
-  components ActiveMessageC;
-    
-    
-
-  EasyDisseminationC.RadioControl -> ActiveMessageC;
-
-
     components DisseminationC;
-  EasyDisseminationC.DisseminationControl -> DisseminationC;
+    components new DisseminatorC(EasyDisseminationMsg, 0x1234) as Diss16C;
+    components new TimerMilliC() as DissTimer;
+    
+    components EasyCollectionC;
+    components CollectionC as Collector;
+    components new CollectionSenderC(0xee);
+    components new TimerMilliC() as CollTimer;
 
-  components new DisseminatorC(EasyDisseminationMsg, 0x1234) as Diss16C;
-  EasyDisseminationC.Value -> Diss16C;
-  EasyDisseminationC.Update -> Diss16C;
-  EasyDisseminationC.Leds -> LedsC;
+    MainC.Boot <- BaseStationP;
 
-  components new TimerMilliC() as DissTimer;
-  EasyDisseminationC.Timer -> DissTimer;
-  
-  components CollectionC as Collector;
-  components new CollectionSenderC(0xee);
+    BaseStationP.RadioControl -> Radio;
+    BaseStationP.SerialControl -> Serial;
 
-  components new TimerMilliC() as CollTimer;
-  EasyCollectionC.Boot -> MainC;
-  EasyCollectionC.RadioControl -> ActiveMessageC;
-  EasyCollectionC.RoutingControl -> Collector;
-  EasyCollectionC.Leds -> LedsC;
-  EasyCollectionC.Timer -> CollTimer;
-  EasyCollectionC.Send -> CollectionSenderC;
-  EasyCollectionC.RootControl -> Collector;
-  EasyCollectionC.Receive -> Collector.Receive[0xee];
-  
-  
-  
-  
-  
-  
-  
+    BaseStationP.UartSend -> Serial;
+    BaseStationP.UartReceive -> Serial.Receive;
+    BaseStationP.UartPacket -> Serial;
+    BaseStationP.UartAMPacket -> Serial;
+
+    BaseStationP.RadioSend -> Radio;
+    BaseStationP.RadioReceive -> Radio.Receive;
+    BaseStationP.RadioSnoop -> Radio.Snoop;
+    BaseStationP.RadioPacket -> Radio;
+    BaseStationP.RadioAMPacket -> Radio;
+
+    BaseStationP.Leds -> LedsC;
+    
+
+    EasyDisseminationC.Boot -> MainC;
+    EasyDisseminationC.RadioControl -> ActiveMessageC;
+    EasyDisseminationC.DisseminationControl -> DisseminationC;
+    EasyDisseminationC.Value -> Diss16C;
+    EasyDisseminationC.Update -> Diss16C;
+    EasyDisseminationC.Leds -> LedsC;
+    EasyDisseminationC.Timer -> DissTimer;
+
+
+    EasyCollectionC.Boot -> MainC;
+    EasyCollectionC.RadioControl -> ActiveMessageC;
+    EasyCollectionC.RoutingControl -> Collector;
+    EasyCollectionC.Leds -> LedsC;
+    EasyCollectionC.Timer -> CollTimer;
+    EasyCollectionC.Send -> CollectionSenderC;
+    EasyCollectionC.RootControl -> Collector;
+    EasyCollectionC.Receive -> Collector.Receive[0xee];
 }
