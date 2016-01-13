@@ -13,7 +13,7 @@ router.get('/', function(req,res){
 		if(bikes!=undefined){
 			var count = 1;
 			bikes.forEach(function(bike){
-				positions.find({user_id:user._id, bike_name:bike.nickname},{}, function(e,docs){
+				positions.find({user_id:user._id, bike_Id:bike._Id},{}, function(e,docs){
 					bikes[bikes.indexOf(bike)].numberOfLogs = docs.length;
 					if(count==bikes.length){
 						res.render('index', {username: username, bikes:bikes});
