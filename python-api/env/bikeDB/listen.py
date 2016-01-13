@@ -31,9 +31,10 @@ while True:
 	        print "time:",t
 	        print "lat:",lat
 	        print "lon:",lon
-	        timestamp=datetime.fromtimestamp(time.time()-int(runtime-t).isoformat()
+	        timestamp=datetime.datetime.fromtimestamp(time.time()-int(runtime-t)).isoformat()
 	        print "timestamp:",timestamp
-	        print "insert:","%d"%int(nodeid,16),lat,lon,timestamp)
+	        print "insert:","%d"%int(nodeid,16),
+		print lat,lon,timestamp
 	        if (lat<99 and lon<99 and lat!=0.0 and lon!=0.0):
 	            bDB.insertPosition("%d"%int(nodeid,16),str(lat),str(lon),timestamp)
 	        #lat = pkt[
