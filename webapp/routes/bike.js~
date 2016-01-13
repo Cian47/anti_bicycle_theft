@@ -23,7 +23,7 @@ router.post('/registerNew',function(req,res){
 			if(docs.length>0){
 			}
 			else{
-				users.update({username:username},{$push:{bikes:{nickname:bikeName, color:color, stolen:false, _Id:sensorId}}})
+				users.update({username:username},{$push:{bikes:{nickname:bikeName, color:color, stolen:false, _Id}}})
 			}
 		});	
 	});

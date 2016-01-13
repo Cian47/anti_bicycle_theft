@@ -17,6 +17,6 @@ block content
                 input(type="text", name="color", class="form-control", required)
               div(class="controls")
                 label Sensor ID
-                input(type="number", name="sensorId", class="form-control", placeholder="Please enter the Sensor ID provided in your manual", required)
+                input(type="number", name="color", class="form-control", placeholder="Please enter the Sensor ID provided in your manual" required)
             button(type="submit", class="btn btn-primary") Register bike
         div(class="col-md-3")
