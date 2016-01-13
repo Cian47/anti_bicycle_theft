@@ -40,7 +40,7 @@ implementation {
   void sendMessage() {
     EasyCollectionMsg* msg =
       (EasyCollectionMsg*)call Send.getPayload(&packet, sizeof(EasyCollectionMsg));
-    msg->nodeid[0] = 0xABCD;
+    msg->nodeid = 0xABCD;
     msg->time[0] = (uint32_t)((call LocalTimeMicro.get())/1000000);
     msg->lat[1] = 0xFEBBBBFA;
     
