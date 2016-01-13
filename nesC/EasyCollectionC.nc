@@ -50,9 +50,9 @@ implementation {
       sendBusy = TRUE;
   }
   event void Timer.fired() {
-    call Leds.led2Toggle();
-    if (!sendBusy)
-      sendMessage();
+    //call Leds.led2Toggle();
+    //if (!sendBusy)
+    //  sendMessage();
   }
   
   event void Send.sendDone(message_t* m, error_t err) {
