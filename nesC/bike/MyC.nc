@@ -40,9 +40,9 @@ implementation {
     uint32_t lons[MAXPOSITIONS];
     uint32_t lats[MAXPOSITIONS];
     uint32_t times[MAXPOSITIONS];
-    uint8_t current_writing_pos=0;
+    int current_writing_pos=0;
     uint32_t gps_signals_received=0;
-    uint8_t current_reading_pos=0;
+    int current_reading_pos=0;
 
 
     int secret()
@@ -71,20 +71,37 @@ implementation {
 
   void sendMessage() {
     uint8_t i;
+    uint8_t j=0;
     EasyCollectionMsg* msg =
       (EasyCollectionMsg*)call Send.getPayload(&packet, sizeof(EasyCollectionMsg));
         msg->nodeid = secret();
+        msg->current_time=(uint32_t)((call LocalTimeMicro.get())/1000);
+        
+        /* clean up the msg*/
+        for (i=0;i<COORDS_PER_PACKET;i++)
+        {
+            msg->time[i]=0;
+            msg->lat[i]=0;
+            msg->lon[i]=0;
+        }
+        
       atomic
       {
-        for (i=current_reading_pos;i<COORDS_PER_PACKET && i!=current_writing_pos;i++)
+        for (i=current_reading_pos;i!=current_writing_pos;i++)
         {
-        msg->time[i] = times[i];
-        msg->lat[i] = lats[i];
-        msg->lon[i] = lons[i];
+        msg->time[j] = times[i];
+        msg->lat[j] = lats[i];//current_reading_pos;//
+        msg->lon[j] = lons[i];//current_writing_pos;//
         times[i]=0;
         lats[i]=0;
         lons[i]=0;
-        current_reading_pos=current_reading_pos+1; //we read the value
+        current_reading_pos++; //we read the value
+        if (current_reading_pos==MAXPOSITIONS)
+            current_reading_pos=0;
+        
+        j++;
+        if (j==COORDS_PER_PACKET)
+            break;
         }
         //msg->time[1] = 0xFFAAFFBB;      
       }
@@ -113,17 +130,20 @@ implementation {
   
   event void GpsMsg.newMessage(gps_msg_t *msg, error_t error) {
             gps_signals_received++;
-            if (gps_started==2 && gps_signals_received%10==9)//now we save coords
+            if (gps_started==2 && gps_signals_received%100==0)//now we save coords
             {
-			double lat = (double) msg->deg[0] + (((double) msg->minhi[0] + ((double) msg->minlo[0] / 100000.0)) / 60.0);
-			double lon = (double) msg->deg[1] + (((double) msg->minhi[1] + ((double) msg->minlo[1] / 100000.0)) / 60.0);
-			lats[current_writing_pos]=(uint32_t)(lat*1000000);
-			lons[current_writing_pos]=(uint32_t)(lon*1000000);
-			times[current_writing_pos]=(uint32_t)((call LocalTimeMicro.get())/1000); //3digits ms
-			current_writing_pos=current_writing_pos+1;
-			if (current_writing_pos==MAXPOSITIONS-1)
-			    current_writing_pos=0;
-            call Leds.led0On();
+			    double lat = (double) msg->deg[0] + (((double) msg->minhi[0] + ((double) msg->minlo[0] / 100000.0)) / 60.0);
+			    double lon = (double) msg->deg[1] + (((double) msg->minhi[1] + ((double) msg->minlo[1] / 100000.0)) / 60.0);
+			    atomic
+			    {
+			        lats[current_writing_pos]=(uint32_t)(lat*1000000);
+			        lons[current_writing_pos]=(uint32_t)(lon*1000000);
+			        times[current_writing_pos]=(uint32_t)((call LocalTimeMicro.get())/1000); //3digits ms
+			        current_writing_pos++;
+			        if (current_writing_pos==MAXPOSITIONS)
+			            current_writing_pos=0;
+                    call Leds.led0Toggle();
+			    }
 			}
 			//double latdist = DIST * (360.0/40075.0);
 			//double londist = DIST * (360.0/(cos(P_LAT)*40075.0)); // 100 Meter in Lat/Lon
@@ -162,7 +182,7 @@ implementation {
         	if (gps_started==0)
         	{
         	    gps_started=1;
-        	    call Timer.startOneShot(300000); //wait Xmin
+        	    call Timer.startOneShot(90000); //wait Xmin
         	    call GpsControl.start();
     	    }
     	    else if (gps_started==2) //startDone for gps
@@ -179,7 +199,7 @@ implementation {
         stolen=0x00;
         if (gps_started>1)
         {
-            //call GpsControl.stop(); //maybe check @startdone, if still stolen...
+            call GpsControl.stop(); //maybe check @startdone, if still stolen...
             gps_started=0;
         }
     }

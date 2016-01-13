@@ -10,6 +10,7 @@ typedef nx_struct EasyDisseminationMsg {
   
   typedef nx_struct EasyCollectionMsg {
     nx_uint16_t nodeid;
+    nx_uint32_t current_time;
     nx_uint32_t time[COORDS_PER_PACKET];
     nx_uint32_t lat[COORDS_PER_PACKET];
     nx_uint32_t lon[COORDS_PER_PACKET];
