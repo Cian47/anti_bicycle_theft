@@ -1,10 +1,13 @@
 import subprocess
 import time
+import bikeDB
 #p = subprocess.Popen(["java net.tinyos.tools.Listen -comm serial@/dev/ttyUSB1:iris &"], stdout=subprocess.PIPE, shell=True)
 p = subprocess.Popen(["java net.tinyos.tools.Listen &"], stdout=subprocess.PIPE, shell=True)
 
 def unsecret(secret):
     return (secret-9)/7
+
+bikeDB = new BikeDB()
 
 COORDS_PER_PACKET=2
 LENGTH_OF_PACKET=(2+4+4+4)*2 #in nibbles
@@ -15,13 +18,17 @@ while True:
 	if (pkt[30:32]=="ee"): #dissemination ID
 	    nodeid=pkt[32:36]
 	    print "sent by:",unsecret(int(nodeid,16)),"(%s)"%nodeid
+	    runtime=int(pkt[36:44],16)/1000.0
+	    print "runtime:",runtime
+	    offset=44
 	    for i in range(0,COORDS_PER_PACKET):
-	        time=int(pkt[36+i*8:36+i*8+8],16)/1000.0
-	        lat=int(pkt[36+i*8+COORDS_PER_PACKET*8:36+i*8+COORDS_PER_PACKET*8+8],16)/1000000.0
-	        lon=int(pkt[36+i*8+COORDS_PER_PACKET*8+COORDS_PER_PACKET*8:36+i*8+COORDS_PER_PACKET*8+COORDS_PER_PACKET*8+8],16)/1000000.0
+	        time=int(pkt[offset+i*8:offset+i*8+8],16)/1000.0
+	        lat=int(pkt[offset+i*8+COORDS_PER_PACKET*8:offset+i*8+COORDS_PER_PACKET*8+8],16)/1000000.0
+	        lon=int(pkt[offset+i*8+COORDS_PER_PACKET*8+COORDS_PER_PACKET*8:offset+i*8+COORDS_PER_PACKET*8+COORDS_PER_PACKET*8+8],16)/1000000.0
 	        
 	        print "time:",time
 	        print "lat:",lat
 	        print "lon:",lon
+	        bikeDB.insertPosition(nodeid,lat,lon,time.time()-(runtime-time))
 	        #lat = pkt[
 	print(pkt)
