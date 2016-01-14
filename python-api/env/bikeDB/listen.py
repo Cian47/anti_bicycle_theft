@@ -4,8 +4,6 @@ import bikeDB
 import datetime
 import thread
 import os
-#p = subprocess.Popen(["java net.tinyos.tools.Listen -comm serial@/dev/ttyUSB1:iris &"], stdout=subprocess.PIPE, shell=True)
-p = subprocess.Popen(["java net.tinyos.tools.Listen &"], stdout=subprocess.PIPE, shell=True)
 
 def unsecret(secret):
     return (secret-9)/7
@@ -21,16 +19,19 @@ def send(bDB):
         for b in stolen:
             stolen_str+="%02x %02x "%(int(b)/256,int(b)%256)
             packetlength+=2
-        pkt = pkt % packetlength
-        pkt = pkt + stolen_str
-        cmd = cmd + pkt.upper()
-        print("send: {}".format(pkt))
-        print(cmd)
-        os.system(cmd)
+        if packetlenght>2:  # why should we send empty packets...
+            pkt = pkt % packetlength
+            pkt = pkt + stolen_str
+            cmd = cmd + pkt.upper()
+            print("send: {}".format(pkt))
+            print(cmd)
+            os.system(cmd)
         time.sleep(10);
 
 
 def recv(bDB):
+    #p = subprocess.Popen(["java net.tinyos.tools.Listen -comm serial@/dev/ttyUSB1:iris &"], stdout=subprocess.PIPE, shell=True)
+    p = subprocess.Popen(["java net.tinyos.tools.Listen &"], stdout=subprocess.PIPE, shell=True)  # use this WITH serialForwarder
     COORDS_PER_PACKET=2
     LENGTH_OF_PACKET=(2+4+4+4)*2 #in nibbles
     while True:
