@@ -1,4 +1,4 @@
-COMPONENT=MyAppC
+COMPONENT=BikeAppC
 SENSORBOARD=mts420cc
 CFLAGS += -I$(TOSDIR)/lib/net \
           -I$(TOSDIR)/lib/net/le \
