@@ -10,11 +10,11 @@ block content
           p You have to register in order to use this site!   
           if error
             div(class="alert alert-danger") #{error}
-          form(method="POST", data-validate="parsley")
+          form(method="POST", data-parsley-validate="")
             div(class="control-group form-group")
               div(class="controls")
                 label username
-                input(type="text", name="username", class="form-control", data-minlength="5", data-maxlength="20" , parsley-min-message="Your username must be at least 5 characters long")
+                input(type="text", name="username", class="form-control", data-parsley-minlength="5", data-maxlength="20" , data-parsley-minlength-message="Your username must be at least 5 characters long")
             div(class="control-group form-group")
               div(class="controls")
                 label password

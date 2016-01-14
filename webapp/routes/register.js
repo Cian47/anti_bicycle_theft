@@ -29,10 +29,10 @@ router.post('/',function(req, res){
 			res.render('register',{title:'register', error:errMessage});
 		}
 		else{
-			req.loginCookie.user = req.body.username;
+			req.loginCookie.username = req.body.username;
 			users.insert({username: req.body.username, password: req.body.password}, function(a,b){
 				if(a) throw a;});
-		res.end('you have been registered');
+		res.redirect('/');
 		}
 	});
 });
