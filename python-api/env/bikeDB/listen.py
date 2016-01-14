@@ -19,14 +19,14 @@ def send(bDB):
         for b in stolen:
             stolen_str+="%02x %02x "%(int(b)/256,int(b)%256)
             packetlength+=2
-        if packetlenght>2:  # why should we send empty packets...
+        if packetlength>2:  # why should we send empty packets...
             pkt = pkt % packetlength
             pkt = pkt + stolen_str
             cmd = cmd + pkt.upper()
             print("send: {}".format(pkt))
             print(cmd)
             os.system(cmd)
-        time.sleep(10);
+        time.sleep(3);
 
 
 def recv(bDB):
@@ -56,7 +56,7 @@ def recv(bDB):
                 timestamp=datetime.datetime.fromtimestamp(time.time()-int(runtime-t)).isoformat()
                 print "timestamp:",timestamp
                 print "insert:","%d"%int(nodeid,16),
-            print lat,lon,timestamp
+                print lat,lon,timestamp
                 if (lat<99 and lon<99 and lat!=0.0 and lon!=0.0):
                     bDB.insertPosition("%d"%int(nodeid,16),str(lat),str(lon),timestamp)
                 #lat = pkt[
@@ -66,5 +66,7 @@ if __name__ == "__main__":
     bDB = bikeDB.BikeDB()
     thread.start_new_thread(send,(bDB,))
     recv(bDB) # blocking
+    #while True:
+    #    time.sleep(1)
     
     
