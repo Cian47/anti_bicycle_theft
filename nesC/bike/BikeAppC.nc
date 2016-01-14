@@ -1,48 +1,43 @@
+
+/**
+* @modified_by Kevin Freeman
+* @modified_by Martin Schwarzmaier
+*/
+
 #include "DataMsg.h"
 
-configuration BikeAppC {
-}
-implementation {
-    components MainC;
-    components LedsC;
-    components BikeC as App;
-    //components Lea4aGpsC as Gps;
-
-    App.Boot -> MainC;
-    App.Leds -> LedsC;
-    //App.GpsControl -> Gps.SplitControl;
-    //App.GpsMsg -> Gps.GpsMsg;
-
-    components ActiveMessageC;
-
-    /*components DisseminationC;
-    App.DisseminationControl -> DisseminationC;
-
-    components new DisseminatorC(EasyDisseminationMsg, 0x1234) as Diss16C;
-    App.Value -> Diss16C;
-    App.Update -> Diss16C;
-
-    //components new TimerMilliC() as DissTimer;
-    //App.Timer -> DissTimer;
-    */
-    
+configuration BikeAppC 
+{}
+implementation 
+{
+    components BikeC, MainC, LedsC, ActiveMessageC;
     components CollectionC as Collector;
     components new CollectionSenderC(0xee);
+    components new TimerMilliC();
+    components Lea4aGpsC as Gps;
+    BikeC.GpsControl -> Gps.SplitControl;
+    BikeC.GpsMsg -> Gps.GpsMsg;
 
-    components new TimerMilliC() as CollTimer;
-    
-    ///*unneeded?*/ EasyCollectionC.RadioControl -> ActiveMessageC;
-    App.RadioControl -> ActiveMessageC;
-    App.RoutingControl -> Collector;
-    //EasyCollectionC.Leds -> LedsC;
-    App.Timer -> CollTimer;
-    App.Send -> CollectionSenderC;
-    App.RootControl -> Collector;
-    App.Receive -> Collector.Receive[0xee];
-    
+    BikeC.Boot -> MainC;
+    BikeC.RadioControl -> ActiveMessageC;
+    BikeC.RoutingControl -> Collector;
+    BikeC.Leds -> LedsC;
+    BikeC.Timer -> TimerMilliC;
+    BikeC.Send -> CollectionSenderC;
+    BikeC.RootControl -> Collector;
+    BikeC.Receive -> Collector.Receive[0xee];
+
 
     components CounterMicro32C;
     components new CounterToLocalTimeC(TMicro) as CounterToLocalTimeMicroC;
     CounterToLocalTimeMicroC.Counter -> CounterMicro32C;
-    App.LocalTimeMicro -> CounterToLocalTimeMicroC;
+    BikeC.LocalTimeMicro -> CounterToLocalTimeMicroC;
+
+
+    components DisseminationC;
+    BikeC.DisseminationControl -> DisseminationC;
+
+    components new DisseminatorC(EasyDisseminationMsg, 0x1234) as Diss16C;
+    BikeC.Value -> Diss16C;
+    BikeC.Update -> Diss16C;
 }
