@@ -100,7 +100,57 @@
 
 \section{Network}
 \subsection{Protocols}
+\subsection{Base Station and Computer Communication}
 \subsection{Topology}
+
+\begin{figure}[h!]
+\begin{tikzpicture}[node distance=1.5cm]
+
+%CLOUD
+\node [cloud, draw,cloud puffs=10,cloud puff arc=120, aspect=2, inner ysep=1em](cl) at (-0.3,4) {Internet};
+
+\node[ellipse, draw, thick, fill=blue!20](bs) at (-1,2){Base Station+PC};
+
+\node[circle, draw, thick, fill=blue!20](n1) at (0,0){Node$_1$} ;
+\node[circle, draw, thick, fill=blue!20, right = of n1](n2){Node$_2$};
+\node[strike out, draw,rotate=-50,ultra thick, fill=blue!20] at (2,-1.5){obstacle};
+\node[circle, draw, thick, fill=blue!20](n3) at (1,-3){Node$_3$};
+\node[circle, draw, thick, fill=blue!20](n4) at (4,-3.5){Node$_4$};
+
+\node[](bike) at (-1,-4){\includegraphics[width=.1\textwidth]{bike.png}};
+
+\draw[->, arrows={Triangle-Triangle}] (bs) -- (cl);
+
+\draw[->, arrows={-Triangle}, draw=red, transform canvas={xshift = 0.05cm}] (bs) -- (n1);
+\draw[->, arrows={-Triangle}, draw=green, transform canvas={xshift = -0.05cm}] (n1) -- (bs);
+
+\draw[->, arrows={-Triangle}, draw=red, transform canvas={xshift = 0.05cm}] (n1) -- (n3);
+\draw[->, arrows={-Triangle}, draw=green, transform canvas={xshift = -0.05cm}] (n3) -- (n1);
+
+\draw[->, arrows={-Triangle}, draw=red, transform canvas={yshift = 0.05cm}] (n1) -- (n2);
+\draw[->, arrows={-Triangle}, draw=green, transform canvas={yshift = -0.05cm}] (n2) -- (n1);
+
+\draw[->, arrows={-Triangle}, draw=red, transform canvas={xshift = 0.05cm}] (n2) -- (n4);
+\draw[->, arrows={-Triangle}, draw=green, transform canvas={xshift = -0.05cm}] (n4) -- (n2);
+
+\draw[->, arrows={-Triangle}, draw=red, transform canvas={yshift = 0.05cm}] (n3) -- (n4);
+\draw[->, arrows={-Triangle}, draw=green, transform canvas={yshift = -0.05cm}] (n4) -- (n3);
+
+\draw[->, arrows={Triangle-}, draw=red, transform canvas={yshift = 0.05cm}] (n3) -- (-0.5,-3.75);
+\draw[->, arrows={Triangle-}, draw=green, transform canvas={yshift = -0.05cm}] (-0.5,-3.75) -- (n3);
+
+\filldraw[color=green] (3,2) rectangle (3.5,2.5);
+\node at (4.375,2.25)  {Collection};
+\filldraw[color=red] (3,1.5) rectangle (3.5,2.0);
+\node at (4.7,1.75)  {Dissemination};
+\filldraw[color=black] (3,1.0) rectangle (3.5,1.5);
+\node at (4.85,1.25)  {SerialForwarder};
+
+
+
+
+\end{tikzpicture}
+\end{figure}
 - extensible by "nodes"
 
 \subsection{Our Example Topology}
