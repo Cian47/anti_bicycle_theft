@@ -38,14 +38,19 @@ router.get('/showBike',function(req,res){
 		positions.find({bike_Id:user.bikes[0]._Id}, function(e,pos){
 			if(pos.length>0){
 			//calculate marker string for map
-			var labels=['A','B','C','D','E'];
+			var labels=['A','B','C','D','E', 'F', 'G'];
 			var markerString = "";
 			var count=0;
 			for(position of pos){
-				markerString+="&markers=color:blue%7Clabel:"+labels[count%labels.length]+"%7C"+position.lat+","+position.long
+				if(count<=7){
+				markerString+="&markers=color:green%7Clabel:"+labels[count]+"%7C"+position.lat+","+position.long
 				count+=1;
+				}
+				else{
+					break;
+				}
 			}
-			res.render('showBike', {username:username, bikeName:bikeName, positions:pos, markerString:markerString})
+			res.render('showBike', {username:username, bikeName:bikeName, positions:pos, markerString:markerString, labels:labels})
 			}
 			else{
 				res.redirect('/');

@@ -33,3 +33,16 @@ h1, h2,h3{
 .splashfixer{
 	height: 20px;
 }
+
+.markered{
+	background-image: url('../images/marker.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	vertical-align: middle;
+}
+.markerLabel{
+	vertical-align: top;
+	margin-top: -3px;
+	margin-left: -2px;
+	vertical-align: top;
+}

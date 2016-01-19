@@ -8,10 +8,14 @@ block content
           th Time
           th Latitude
           th Longitude
+          th Marker
         each position in positions
           tr
             td #{moment(position.time).format("DD.MM.YY HH:mm") }
             td #{position.lat}
             td #{position.long}
+            if positions.indexOf(position)<7
+              td(class="markered") 
+                div(class="markerLabel") #{labels[positions.indexOf(position)]}
     div(class="col-md-6")
       img(src="https://maps.googleapis.com/maps/api/staticmap?center=#{positions[positions.length-1].lat},#{positions[positions.length-1].long}&zoom=15&size=400x400#{markerString}&key=AIzaSyB2_DlPkTUMRyzbPn-8VZMiKpfJpJ2wbBA")
