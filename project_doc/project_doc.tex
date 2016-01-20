@@ -92,11 +92,37 @@
 ... bicycle theft, current problem (goettingen e.g.), pro contra to GSM/Bluetooth e.g.
 
 \section{Used Sensorboards and Motes}
-\subsection{IRIS Mote}
+We used the standard IRIS motes for everything....
+\url{http://www.memsic.com/userfiles/files/Datasheets/WSN/IRIS_Datasheet.pdf}
 \subsubsection{Base Station}
+Our base station is connected to a computer via USB. On this computer, a SerialForwarder is run in order to establish a possibility to send and receive data to and from the base station. For this project, on the one hand, we have to push \texttt{ID}s of stolen bikes to the base station in order to disseminate the \texttt{ID}s through the network. On the other hand, a collection protocol is implemented to gather information from stolen bikes, like coordinates.\\
+\%TODO several picutres here (CLI, serialforwarder)
 \subsubsection{Network Node}
+The network nodes are completely omittable as they only enlarge the network. So if one wants a great availability of the network more network nodes are needed. These are connected with other network nodes and disseminate and collect the mentioned data to and from the base station.
 \subsubsection{Bicycle Mote}
-\subsection{Sensorboard mts420-cc}
+Bicycle motes are connected to each bicycle and equipped with a mts420-cc sensorboard including GPS-antenna.\\
+\%TODO picture of stuff\\
+Each of them has a unique identifier (\texttt{ID}), which is used on our webview lateron. Here, the user is able to mark his bicycle as stolen. Afterwards, the \texttt{ID} is disseminated through the whole network. If the bicycle comes in range of a network node, it receives a dissemination packets. These are called "pings", as the bicycle knows that the network is in range and available. It will therefore check, if its own \texttt{ID} is marked as stolen. If so, the GPS antenna is powered on and starts collecting data (current runtime, latitude, longitude).\\
+After collecting data successfully and receiving another ping, the bicycle mote will dump the data into the network using the collection protocol. The amount of data per packet can be easily changed within the \texttt{./nesC/DataMsg.h}, as seen in Listing \ref{lst:datamsg}.
+\begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:datamsg]
+//...
+#define MAXBIKES 10
+#define COORDS_PER_PACKET 2
+typedef nx_struct EasyDisseminationMsg 
+{
+    nx_uint16_t bikes[MAXBIKES];
+} EasyDisseminationMsg;
+//...
+typedef nx_struct EasyCollectionMsg 
+{
+    nx_uint16_t nodeid;
+    nx_uint32_t current_time;
+    nx_uint32_t time[COORDS_PER_PACKET];
+    nx_uint32_t lat[COORDS_PER_PACKET];
+    nx_uint32_t lon[COORDS_PER_PACKET];
+} EasyCollectionMsg;
+\end{lstlisting}
+Each mote has a RAM of 8kB. Therefore, it is possible to store 600 tuples on the bicycle mote RAM. As we are approximately storing one tuple every 3 minutes, it is possible to store the coordinates of the last 30h. This can be extended by saving onto the flash itself, which we left out for future work, as 30h is enough for all our testcases as well as the battery time is limited due to usage of GPS as well. \%TODO batterien haben 3.4k mAh oder so, gps brauch 70 mAh
 
 \section{Network}
 \subsection{Protocols}
