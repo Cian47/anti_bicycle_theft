@@ -185,6 +185,101 @@ insert picture here
 
 \section{Conclusion}
 \section{Future Aspects}
+
+\section{Relevant codes passages... just a dump}
+\subsection{base\_station}
+Receiving stolen bicycle IDs from PC
+\begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:xxx]
+//...
+for (i=0;i<MAXBIKES;i++)
+{
+    pkt.bikes[i]=msg->data[i*2]*256+msg->data[i*2+1];
+}
+//...
+\end{lstlisting}
+
+\subsection{base\_station}
+Receiving stolen bicycle IDs from PC
+\begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:xxx]
+#define MAXPOSITIONS 100
+//...
+uint32_t lons[MAXPOSITIONS];
+uint32_t lats[MAXPOSITIONS];
+uint32_t times[MAXPOSITIONS];
+//reading
+atomic
+{
+    for (i=current_reading_pos;i!=current_writing_pos;i++)
+    {
+        msg->time[j] = times[i];
+        msg->lat[j] = lats[i];
+        msg->lon[j] = lons[i];
+        times[i]=0;
+        lats[i]=0;
+        lons[i]=0;
+        current_reading_pos++; //we read the value
+        if (current_reading_pos==MAXPOSITIONS)
+            current_reading_pos=0;
+
+        j++;
+        if (j==COORDS_PER_PACKET)
+            break;
+    }    
+}
+//writing
+atomic
+{
+    lats[current_writing_pos]=(uint32_t)(lat*1000000);
+    lons[current_writing_pos]=(uint32_t)(lon*1000000);
+    times[current_writing_pos]=(uint32_t)((call LocalTimeMicro.get())/1000); //3digits ms
+    current_writing_pos++;
+    if (current_writing_pos==MAXPOSITIONS)
+        current_writing_pos=0;
+    call Leds.led0Toggle();
+}   
+//receiving IDs and starting gps if stolen
+event void Value.changed() 
+{
+uint8_t i;
+const EasyDisseminationMsg* newVal = call Value.get();
+bool found=FALSE;
+pkt = *newVal;
+for (i=0;i<MAXBIKES;i++)
+{
+    if (pkt.bikes[i]==secret())
+    {  
+        stolen=0x01;
+        found=TRUE;
+        call Leds.led1On();
+        if (gps_started==0)
+        {
+            gps_started=1;
+            call Timer.startOneShot(90000); //wait X/1000 secs
+            call GpsControl.start();
+        }
+        else if (gps_started==2) //startDone for gps
+        {   
+            call Leds.led2Toggle();
+            //it is stolen AND received a broadcast 
+            //=> DUMP ONE PACKET
+            sendMessage(); 
+        }
+    }
+}
+if (found==FALSE)
+{
+    call Leds.led1Off();
+    stolen=0x00;
+    if (gps_started>1)
+    {
+        call GpsControl.stop();
+        gps_started=0;
+    }
+}
+\end{lstlisting}
+
+
+
 \section{References}
 Dissemination and collection protocols for TinyOS: \url{http://tinyos.stanford.edu/tinyos-wiki/index.php/Network_Protocols}
 
