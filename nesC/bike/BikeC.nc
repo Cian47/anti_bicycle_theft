@@ -184,7 +184,7 @@ implementation
                 if (gps_started==0)
                 {
                     gps_started=1;
-                    call Timer.startOneShot(90000); //wait Xmin
+                    call Timer.startOneShot(90000); //wait X/1000 secs
                     call GpsControl.start();
                 }
                 else if (gps_started==2) //startDone for gps
