@@ -4,9 +4,6 @@
 #include "DataMsg.h"
 
 #define MAXPOSITIONS 100
-#define P_LAT 51.556147 //Center Coordinates, red LED will light up
-#define P_LON  9.948392 //if going more than defined distance away in either direction
-#define DIST 0.1  //in kilometres
 
 /**
 * @modified_by Kevin Freeman
@@ -158,18 +155,9 @@ implementation
                 call Leds.led0Toggle();
             }       
        }
-        //double latdist = DIST * (360.0/40075.0);
-        //double londist = DIST * (360.0/(cos(P_LAT)*40075.0)); // 100 Meter in Lat/Lon
 
         if(error == SUCCESS) call Leds.led2Toggle(); //Blink Yellow for GPS fix
         
-        /*if(lat > P_LAT+latdist || lat < P_LAT-latdist || lon < P_LON-londist || lon > P_LON+londist) {
-            call Leds.led0On();
-            call Leds.led1Off();   //Red Light
-        } else {
-            call Leds.led1On();
-            call Leds.led0Off();   //Green Light
-        }*/
         //gps_started=2; //made timer dependent
             call GpsMsg.Listen(TRUE);
         }
