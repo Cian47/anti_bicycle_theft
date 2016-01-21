@@ -190,7 +190,9 @@ implementation
                 else if (gps_started==2) //startDone for gps
                 {   
                     call Leds.led2Toggle();
-                    sendMessage(); //it is stolen AND received a broadcast => DUMP ONE PACKET
+                    //it is stolen AND received a broadcast 
+                    //=> DUMP ONE PACKET
+                    sendMessage(); 
                 }
             }
         }
@@ -200,7 +202,7 @@ implementation
             stolen=0x00;
             if (gps_started>1)
             {
-                call GpsControl.stop(); //maybe check @startdone, if still stolen...
+                call GpsControl.stop();
                 gps_started=0;
             }
         }
