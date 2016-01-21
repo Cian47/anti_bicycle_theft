@@ -96,8 +96,8 @@ implementation
             for (i=current_reading_pos;i!=current_writing_pos;i++)
             {
                 msg->time[j] = times[i];
-                msg->lat[j] = lats[i];//current_reading_pos;//
-                msg->lon[j] = lons[i];//current_writing_pos;//
+                msg->lat[j] = lats[i];
+                msg->lon[j] = lons[i];
                 times[i]=0;
                 lats[i]=0;
                 lons[i]=0;
@@ -108,8 +108,7 @@ implementation
                 j++;
                 if (j==COORDS_PER_PACKET)
                     break;
-            }
-                //msg->time[1] = 0xFFAAFFBB;      
+            }      
         }
 
         if (call Send.send(&packet, sizeof(EasyCollectionMsg)) != SUCCESS) 
