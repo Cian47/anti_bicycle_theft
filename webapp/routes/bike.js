@@ -38,7 +38,7 @@ router.get('/showBike',function(req,res){
 		positions.find({bike_Id:user.bikes[0]._Id}, function(e,pos){
 			if(pos.length>0){
 			//calculate marker string for map
-			var labels=['A','B','C','D','E', 'F', 'G'];
+			var labels=['A',  'B',  'C',  'D',  'E',  'F',  'G',  'H',  'I',  'J',  'K',  'L',  'M',  'N',  'O',  'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',  'X',  'Y',  'Z'];
 			var markerString = "";
 			var count=0;
 			for(position of pos){

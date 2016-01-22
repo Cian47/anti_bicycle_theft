@@ -14,7 +14,7 @@ block content
             td #{moment(position.time).format("DD.MM.YY HH:mm") }
             td #{position.lat}
             td #{position.long}
-            if positions.indexOf(position)<7
+            if positions.indexOf(position)<27
               td(class="markered") 
                 div(class="markerLabel") #{labels[positions.indexOf(position)]}
     div(class="col-md-6")
