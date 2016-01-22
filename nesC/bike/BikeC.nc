@@ -10,7 +10,7 @@
 * @modified_by Martin Schwarzmaier
 */
 
-module MyC 
+module BikeC 
 {
     uses interface Boot;
     uses interface SplitControl as RadioControl;
