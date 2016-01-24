@@ -89,14 +89,42 @@
 \setcounter{page}{1} %nun Seitennummerierung bei eins beginnen
 
 \section{Introduction}
-... bicycle theft, current problem (goettingen e.g.), pro contra to GSM/Bluetooth e.g.
+... bicycle theft, current problem (goettingen e.g.), pro contra to GSM/Bluetooth e.g.\\
+Neues Vorgehen:
+also 1. intro, 2. used motes + sensorboard + mongodb + nodejs etc und 3 walkthrough => wie man es benutzt und 4 dann alle bestandteile und protokolle etc erklären
+
+\section{Used Sensorboards and Motes}
+We used the standard IRIS motes for everything....
+\url{http://www.memsic.com/userfiles/files/Datasheets/WSN/IRIS_Datasheet.pdf}
 
 \section{Walkthrough}
-
+This section demonstrates the project in order to understand explanations given lateron. 
 \subsection{Flashing the motes}
-Required: Base Station + 1 Mote per bicycle
+In order to make this project work, at least one IRIS mote as a base station as well as one iris mote equipped with a mts420-cc board including a gps antenna are needed. Each additional bicycle will need the same sensorboard and gps antenna. Additionally, it is possible to extend the network range with extra motes. This brings us to the following amount of needed motes:
+\begin{enumerate}
+\item[a)] one base station [./nesC/base\_station]
+\item[b)] one mts420-cc sensorboard with gps antenna per bicycle [./nesC/bike]
+\item[c)] any amount of network node motes [./nesC/nodes]
+\end{enumerate}
 \subsection{Starting MongoDB, NodeJS and SerialForwarder}
-Packages needed (...)
+As the whole project is supposed to be user friendly, a webserver (Node.js) is implemented including a database (MongoDB).
+The webserver can be started by running the following command and will be available under \texttt{localhost:8080} afterwards:
+\begin{lstlisting}[frame=single,language=bash]
+$ node ./webapp/app.js
+\end{lstlisting}
+Additionally, the MongoDB daemon has to be started:
+\begin{lstlisting}[frame=single,language=bash]
+# mongod
+\end{lstlisting}
+Now the user is able to register to the webservice and mark his bicycles as stolen them already as shown in Figure \ref{fig:webregistration}. Once gps data is collected, he is able to review this on the same webpage as seen in Figure \ref{fig:gpsdata}. \%TODO screenshot example\\
+
+TODO:java+python2 \\
+Collect+send data via ./python-api/env/bikeDB/listen.py
+
+
+
+
+Packages needed node, mongo, python2, java(...)
 \subsection{Registration and Tracking}
 \%TODO Screenshot of Views
 
