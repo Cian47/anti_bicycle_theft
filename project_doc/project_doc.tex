@@ -118,7 +118,28 @@ Additionally, the MongoDB daemon has to be started:
 \begin{lstlisting}[frame=single,language=bash]
 # mongod
 \end{lstlisting}
-Now the user is able to register to the webservice and mark his bicycles as stolen them already as shown in Figure \ref{fig:webregistration}. Once gps data is collected, he is able to review this on the same webpage, as seen in Figure \ref{fig:gpsdata}. \%TODO screenshot example\\
+Now the user is able to register to the webservice and mark his bicycles as stolen them already as shown in Figure \ref{fig:webregistration} and \ref{fig:mark}. Once gps data is collected, he is able to review this on the same webpage, as seen in Figure \ref{fig:gpsdata}.
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.3]{pics/reg.png}
+\end{center}
+\caption{Registration website}
+\label{fig:webregistration}
+\end{figure}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.3]{pics/mark.png}
+\end{center}
+\caption{Viewing registered bikes}
+\label{fig:mark}
+\end{figure}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.3]{pics/view.png}
+\end{center}
+\caption{Viewing gathered gps coordinates}
+\label{fig:gpsdata}
+\end{figure}
 
 On the other side, the base station establishes a connection to the database via python, which is calling the java classes \texttt{\path{net.tinyos.tools.Send}} and \texttt{\path{net.tinyos.tools.Listen}}. These are available after starting the \texttt{SerialForwarder} with:
 \begin{lstlisting}[frame=single,language=bash]
@@ -132,10 +153,10 @@ $ python2 ./python-api/env/bikeDB/listen.py
 
 Our test environment used the following Linux packages:
 \begin{enumerate}
-\item nodejs (version 5.4.1)
+\item nodejs (version 5.5.0)
 \item python2 (version 2.7.11)
 \item mongodb (version 3.2.0)
-\item jdk8-openjdk (version 8.u66)
+\item jdk7-openjdk (version 7.u95\_2.6.4)
 \item python2-pymongo (version 3.2)
 
 \end{enumerate}
@@ -167,7 +188,7 @@ typedef nx_struct EasyCollectionMsg
 \end{lstlisting}
 Obviously, the content and variable types can be changed easily, too.
 \subsection{Base Station}
-Our base station \texttt{[./nesC/base\_station]} is connected to a computer via USB. On this computer, a \texttt{SerialForwarder} is run in order to establish a possibility to send and receive data to and from the base station. For this project, on the one hand, we have to push \texttt{ID}s of stolen bikes to the base station in order to disseminate them through the network. On the other hand, the collection protocol is implemented to gather information from stolen bikes, like coordinates. This is done via a python script, which can be seen in Listing \ref{lst:listen.py}. In line it imports our bikeDB class, which is simply providing methods to read and write to the database.\\
+Our base station \texttt{[./nesC/base\_station]} is connected to a computer via USB. On this computer, a \texttt{SerialForwarder} is run in order to establish a possibility to send and receive data to and from the base station. For this project, on the one hand, we have to push \texttt{ID}s of stolen bikes to the base station in order to disseminate them through the network. On the other hand, the collection protocol is implemented to gather information from stolen bikes, like coordinates. This is done via a python script, which can be seen in Listing \ref{lst:listen.py}. In line \%TODO it imports our bikeDB class, which is simply providing methods to read and write to the database.\\
 \begin{lstlisting}[numbers=left, frame=single,language=python, captionpos=b, caption={listen.py, ............}, label=lst:listen.py]
 todo: push the new one -.-
 \end{lstlisting}
@@ -182,7 +203,7 @@ After recording data successfully and receiving another ping, the bicycle mote w
 
 \%TODO: kann weg? The amount of data per packet can be easily changed within the \texttt{./nesC/DataMsg.h}, as seen in Listing \ref{lst:datamsg}.
 
-Each mote has a RAM of 8kB. Therefore, it is possible to store 600 tuples on the bicycle mote RAM. As we are approximately storing one tuple every 3 minutes, it is possible to store the coordinates of the last 30h. This can be extended by saving onto the flash itself, which we left out for future work, as 30h is enough for all our testcases as well as the battery time is limited due to usage of GPS as well. \%TODO batterien haben 3.4k mAh oder so, gps brauch 70 mAh
+Each mote has a RAM of 8kB. Therefore, it is possible to store 600 coordinate-tuples on the bicycle mote RAM. As we are approximately storing one tuple every 3 minutes, it is possible to store the coordinates of the last 30h. This can be extended by saving onto the flash storage itself, which we left out for future work, as 30h is enough for all our testcases as well as the battery time is limited due to usage of GPS as well. \%TODO batterien haben 3.4k mAh oder so, gps brauch 70 mAh
 
 \subsection{Topology}
 
@@ -242,16 +263,22 @@ Each mote has a RAM of 8kB. Therefore, it is possible to store 600 tuples on the
 
 \section{Conclusion}
 \section{Future Aspects}
+The projects objective is to point out the possibility of a new tracking system using IRIS motes. Therefore, some additions have been left out, as they would not change the procedure, but increase the security, for example. All of these points are explained in this section.
 \begin{enumerate}
-\item PRIVACY $\rightarrow$ GPS TRACKING ??
-\item BATTERY $\rightarrow$ LOAD WHILE CYCLING
-\item BIKES DISSEMINATE STOLEN BIKES
-\item ENCRYPTED TRAFFIC
-\item flash instead of RAM
-\item hidden sensor (in bike e.g., but still have connectivity)
-\item use wifi instead of GPS to track location
+\item \textbf{Privacy and authentication}. Obviously, admins are able to review data of users and mark specific bicycles as stolen, to start the gatherin process. Therefore, the gps data gathered could be encrypted using asymmetric cryptography. The user will receive encrypted data and decrypt it using his private key.
+\item \textbf{Encrypted traffic}. Relating to the previous point, the whole traffic of the network, including dissemination of stolen bicycle IDs, should be encrypted to ensure privacy and integrity of packets.
+\item \textbf{Further dissemination of stolen IDs}. Bicycle motes, regardless of their state, can save and disseminate the \texttt{ID}s of stolen bicycles. This way, a bicycle is able to start gathering data without connecting to the network, but to another bicycle. Obviously, one has to take care of synchronicity.
+\item \textbf{Flash storage}. Instead of just keeping the gathered gps data in the memory, one could save them to the flash of the mote and load them again when receiving a ping of the network. This provides the possibility to store a huge amount of coordinates.
+\item \textbf{Battery life}. When implementing the previous mentioned point, the battery life has to be extended as well as GPS needs a lot of battery. However, one could use two approaches:
+\begin{enumerate}
+\item A stolen bicycle is going to be used. Therefore, one could power the mote using the energy of a dynamo attached to the bicycle.
+\item At some places, for example a cellar, the gps antenna is not able to maintain a connection. Hence, the gps antenna could be powered off after e.g. 1 minute without connection. Afterwards, start the gps again after a small amount of time and check for connection again.
+\end{enumerate}
+\item \textbf{Hiding of the mote}. The thief may not see and be able to remove the mote from the bicycle. So the mote has to be hidden somewhere in the frame of the bicycle without losing signal.
+\item \textbf{GPS exchangeability}. As GPS drains a lot of battery, one could think of implementing a wifi scanner instead of GPS. As wifi is widely used, nearly everywhere wifi networks can be found. Using the \texttt{SSID}s only (without connecting to them) one is able to specify the current location. This obviously consumes less power than gps and will even work, when a bicycle is e.g. in a garage, where a gps antenna will not be able to establish a connection.
 \end{enumerate}
 
+\%TODO gps VS GPS
 
 \section{Relevant codes passages... just a dump}
 \subsection{base\_station}
