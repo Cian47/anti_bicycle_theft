@@ -5,6 +5,8 @@ import datetime
 import thread
 import os
 
+maxBikes=10
+
 def unsecret(secret):
     return (secret-9)/7
 
@@ -19,13 +21,26 @@ def send(bDB):
         for b in stolen:
             stolen_str+="%02x %02x "%(int(b)/256,int(b)%256)
             packetlength+=2
-        if packetlength>2:  # why should we send empty packets...
+        for i in range(maxBikes-len(stolen)):
+            stolen_str+="00 00 "
+            packetlength+=2
+        if packetlength>2: 
             pkt = pkt % packetlength
             pkt = pkt + stolen_str
             cmd = cmd + pkt.upper()
             print("send: {}".format(pkt))
             print(cmd)
             os.system(cmd)
+        #else:
+        #    stolen_str+="FF FF "
+        #    packetlength+=2
+        #    pkt = pkt % packetlength
+        #    pkt = pkt + stolen_str
+        #    cmd = cmd + pkt.upper()
+        #    print("send: {}".format(pkt))
+        #    print(cmd)
+        #    os.system(cmd)
+
         time.sleep(3);
 
 
