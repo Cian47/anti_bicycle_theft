@@ -16,9 +16,6 @@
 
 %\usepackage{mdframed}
 \usepackage{enumerate}
-\newcommand{\goTo}{\texttt{GoTo}}
-\newcommand{\fail}{\texttt{Fail}}
-\newcommand{\outputf}{\texttt{Output}}
 %\usepackage[hyphenbreaks]{breakurl}
 
 \usepackage{graphicx} %\includegraphics
@@ -93,19 +90,46 @@
 Neues Vorgehen:
 also 1. intro, 2. used motes + sensorboard + mongodb + nodejs etc und 3 walkthrough => wie man es benutzt und 4 dann alle bestandteile und protokolle etc erklären
 
-\section{Used Sensorboards and Motes}
-We used the standard IRIS motes for everything....
-\url{http://www.memsic.com/userfiles/files/Datasheets/WSN/IRIS_Datasheet.pdf}\\
-sensorboard mts-420cc\\
-gps antenna
+\section{Environment}
+Before presenting the project we firstly show what the whole environment looks like. Firstly, IRIS motes\footnote{A full description can be found at \url{http://www.memsic.com/userfiles/files/Datasheets/WSN/IRIS_Datasheet.pdf}} are used (see Figure \ref{fig:mote}). Programs for the motes are written in nesC\footnote{\url{http://www.tinyos.net/api/nesc/doc/ref.pdf}}, compiled and flashed with tinyOS. Additionally, the computer used provides packages mentionend in Section \ref{sec:walkthrough} and is connected to a base station via USB Gateway, which can be seen in Figure \ref{fig:gateway}. Some of the motes are connected to a MTS420CC sensorboard (see Figure \ref{fig:420cc}). A GPS antenna is attached to the sensorboards.\footnote{Figure \ref{fig:mote}, \ref{fig:gateway} and \ref{fig:420cc} have been take from \url{https://user.informatik.uni-goettingen.de/~sensorlab/Hardware.php}}
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.75]{pics/mote.jpg}
+\caption{Standard IRIS mote without sensorboard.}
+\label{fig:mote}
+\end{center}
+\end{figure}
+\begin{figure}[h!]
 
-\section{Walkthrough}
-This section demonstrates the project without showing technical details, as they will be explained in Section \%TODO refhere. 
+\begin{center}
+\begin{minipage}{0.47\textwidth}
+\begin{center}
+\includegraphics[scale=0.5]{pics/gateway.jpg}
+\caption{USB Gateway, used to forward packets via USB.}
+\label{fig:gateway}
+\end{center}
+\end{minipage}
+\begin{minipage}{0.06\textwidth}
+\end{minipage}
+\begin{minipage}{0.47\textwidth}
+\begin{center}
+\includegraphics[scale=0.5]{pics/420cc.jpg}
+\caption{MTS420CC sensorboard, able to process GPS signals.}
+\label{fig:420cc}
+\end{center}
+\end{minipage}
+
+\end{center}
+
+\end{figure}
+
+\section{Walkthrough}\label{sec:walkthrough}
+This section demonstrates the project without showing technical details, as they will be explained in Section \ref{sec:insight}. 
 \subsection{Flashing the motes}
-In order to make this project work, at least one IRIS mote as a base station as well as one iris mote equipped with a mts420-cc board including a gps antenna are needed. Each additional bicycle will need the same sensorboard and gps antenna. Additionally, it is possible to extend the network range with extra motes. This brings us to the following amount of needed motes:
+In order to make this project work, at least one IRIS mote as a base station as well as one iris mote equipped with a MTS420CC board including a gps antenna are needed. Each additional bicycle will need the same sensorboard and gps antenna. Additionally, it is possible to extend the network range with extra motes. This brings us to the following amount of needed motes:
 \begin{enumerate}
 \item[a)] one base station \texttt{[./nesC/base\_station]}
-\item[b)] one mts420-cc sensorboard with gps antenna per bicycle \texttt{[./nesC/bike]}
+\item[b)] one MTS420CC sensorboard with gps antenna per bicycle \texttt{[./nesC/bike]}
 \item[c)] any amount of network node motes \texttt{[./nesC/nodes]}
 \end{enumerate}
 \subsection{Starting MongoDB, NodeJS and SerialForwarder}
@@ -166,7 +190,7 @@ Packages needed node, mongo, python2, java, pymongo
 \%TODO Screenshot of Views\\
 is this section still necessary?
 
-\section{network protocols and mote insight \%todo: clever sectionname here}
+\section{network protocols and mote insight \%todo: clever sectionname here}\label{sec:insight}
 As the walkthrough only showed how to use the project, this section will show the programs and protocols used for each mote in detail. As all motes are supposed to talk with each other, one superior header file is implemented. It provides easy changeable variables for the maximal amount of bicycles, that can be stolen at once as well as how many gps coordinates are gathered in a single packet as seen in Listing \ref{lst:datamsg}. The gathering process uses the Collection \%TODO quelle protocol and the propagating of stolen bicycle \texttt{ID}s is done via the Dissemination protocol. 
 \begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:datamsg]
 //...
@@ -196,14 +220,14 @@ todo: push the new one -.-
 \subsection{Network Node}
 The network nodes are completely omittable as they only enlarge the network. More network nodes are needed if a great availability of the network is wanted. These are connected with other network nodes and disseminate and collect the data mentioned already to and from the base station and bicycle motes. Currently, they are doing nothing but disseminating and collecting. However, functionality can be easily added in the \texttt{\path{./nesC/nodes/NodeC.nc}}.
 \subsection{Bicycle Mote}
-Bicycle motes are attached to each bicycle and equipped with a mts420-cc sensorboard including GPS-antenna.\\
+Bicycle motes are attached to each bicycle and equipped with a MTS420CC sensorboard including GPS-antenna.\\
 \%TODO picture of stuff\\
 Each of them has a unique identifier (\texttt{ID}), which is used in order to link a mote to a bicycle. On our webview the user is then able to mark his bicycle as stolen. Afterwards, the \texttt{ID} is disseminated through the whole network. If the bicycle approaches a network node, it receives a dissemination packet. These are called "pings". As the bicycle now knows that the network is in range and available, it will check, if its own \texttt{ID} is marked as stolen. If so, the GPS antenna is powered on and starts approximate 90 seconds later to save data (current runtime, latitude, longitude).\\
 After recording data successfully and receiving another ping, the bicycle mote will dump the data into the network using the collection protocol.
 
 \%TODO: kann weg? The amount of data per packet can be easily changed within the \texttt{./nesC/DataMsg.h}, as seen in Listing \ref{lst:datamsg}.
 
-Each mote has a RAM of 8kB. Therefore, it is possible to store 600 coordinate-tuples on the bicycle mote RAM. As we are approximately storing one tuple every 3 minutes, it is possible to store the coordinates of the last 30h. This can be extended by saving onto the flash storage itself, which we left out for future work, as 30h is enough for all our testcases as well as the battery time is limited due to usage of GPS as well. \%TODO batterien haben 3.4k mAh oder so, gps brauch 70 mAh
+Each mote has a RAM of 8kB. Therefore, it is possible to store 600 coordinate-tuples on the bicycle mote RAM. As we are approximately storing one tuple every 3 minutes, it is possible to store the coordinates of the last 30h. This can be extended by saving onto the measurement flash itself, which we left out for future work, as 30h is enough for all our testcases as well as the battery time is limited due to usage of GPS as well. \%TODO batterien haben 3.4k mAh oder so, gps brauch 70 mAh
 
 \subsection{Topology}
 
@@ -268,7 +292,7 @@ The projects objective is to point out the possibility of a new tracking system 
 \item \textbf{Privacy and authentication}. Obviously, admins are able to review data of users and mark specific bicycles as stolen, to start the gatherin process. Therefore, the gps data gathered could be encrypted using asymmetric cryptography. The user will receive encrypted data and decrypt it using his private key.
 \item \textbf{Encrypted traffic}. Relating to the previous point, the whole traffic of the network, including dissemination of stolen bicycle IDs, should be encrypted to ensure privacy and integrity of packets.
 \item \textbf{Further dissemination of stolen IDs}. Bicycle motes, regardless of their state, can save and disseminate the \texttt{ID}s of stolen bicycles. This way, a bicycle is able to start gathering data without connecting to the network, but to another bicycle. Obviously, one has to take care of synchronicity.
-\item \textbf{Flash storage}. Instead of just keeping the gathered gps data in the memory, one could save them to the flash of the mote and load them again when receiving a ping of the network. This provides the possibility to store a huge amount of coordinates.
+\item \textbf{Measurement flash}. Instead of just keeping the gathered gps data in the memory, one could save them to the flash of the mote and load them again when receiving a ping of the network. This provides the possibility to store a huge amount of coordinates.
 \item \textbf{Battery life}. When implementing the previous mentioned point, the battery life has to be extended as well as GPS needs a lot of battery. However, one could use two approaches:
 \begin{enumerate}
 \item A stolen bicycle is going to be used. Therefore, one could power the mote using the energy of a dynamo attached to the bicycle.
