@@ -97,7 +97,7 @@ Quellen:
 2:
 \url{http://www.spybike.com/}\\
 3:
-\url{http://www.golem.de/news/bike-spike-gps-modul-gegen-fahrradklau-1303-98306.html}
+\url{http://www.golem.de/news/bike-spike-GPS-modul-gegen-fahrradklau-1303-98306.html}
 (offizielle website nicht erreichbar)\\
 4:
 \url{https://www.cycleleash.com.au/}\\
@@ -149,10 +149,10 @@ Our test environment used the following Linux packages:
 \section{Walkthrough}\label{sec:walkthrough}
 This section demonstrates the project without showing technical details, as they will be explained in Section \ref{sec:insight}. 
 \subsection{Flashing the motes}
-In order to make this project work, at least one IRIS mote as a base station as well as one iris mote equipped with a MTS420CC board including a gps antenna are needed. Each additional bicycle will need the same sensorboard and gps antenna. Additionally, it is possible to extend the network range with extra motes. This brings us to the following amount of needed motes:
+In order to make this project work, at least one IRIS mote as a base station as well as one iris mote equipped with a MTS420CC board including a GPS antenna are needed. Each additional bicycle will need the same sensorboard and GPS antenna. Additionally, it is possible to extend the network range with extra motes. This brings us to the following amount of needed motes:
 \begin{enumerate}
 \item[a)] one base station \texttt{[./nesC/base\_station]}
-\item[b)] one MTS420CC sensorboard with gps antenna per bicycle \texttt{[./nesC/bike]}
+\item[b)] one MTS420CC sensorboard with GPS antenna per bicycle \texttt{[./nesC/bike]}
 \item[c)] any amount of network node motes \texttt{[./nesC/nodes]}
 \end{enumerate}
 \subsection{Starting MongoDB, NodeJS and SerialForwarder}
@@ -165,7 +165,7 @@ Additionally, the MongoDB daemon has to be started:
 \begin{lstlisting}[frame=single,language=bash]
 # mongod
 \end{lstlisting}
-Now the user is able to register to the webservice and mark his bicycles as stolen them already as shown in Figure \ref{fig:webregistration} and \ref{fig:mark}. Once gps data is collected, he is able to review this on the same webpage, as seen in Figure \ref{fig:gpsdata}.
+Now the user is able to register to the webservice and mark his bicycles as stolen them already as shown in Figure \ref{fig:webregistration} and \ref{fig:mark}. Once GPS data is collected, he is able to review this on the same webpage, as seen in Figure \ref{fig:GPSdata}.
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=0.3]{pics/reg.png}
@@ -184,8 +184,8 @@ Now the user is able to register to the webservice and mark his bicycles as stol
 \begin{center}
 \includegraphics[scale=0.3]{pics/view.png}
 \end{center}
-\caption{Viewing gathered gps coordinates}
-\label{fig:gpsdata}
+\caption{Viewing gathered GPS coordinates}
+\label{fig:GPSdata}
 \end{figure}
 
 On the other side, the base station establishes a connection to the database via python, which is calling the java classes \texttt{\path{net.tinyos.tools.Send}} and \texttt{\path{net.tinyos.tools.Listen}}. These are available after starting the \texttt{SerialForwarder} with:
@@ -193,13 +193,13 @@ On the other side, the base station establishes a connection to the database via
 $ java net.tinyos.sf.SerialForwader
                             -comm serial@/dev/ttyUSB1:iris
 \end{lstlisting}
-Afterwards, only the \texttt{listen.py} has to be run, which imports our \texttt{\path{./python-api/env/bikeDB/bikeDB.py}} script. This will enable automatic gathering of stolen bicycle \texttt{ID}s from the database and push them into the network, but will also collect gps coordinates from bicycles and save them in the database.
+Afterwards, only the \texttt{listen.py} has to be run, which imports our \texttt{\path{./python-api/env/bikeDB/bikeDB.py}} script. This will enable automatic gathering of stolen bicycle \texttt{ID}s from the database and push them into the network, but will also collect GPS coordinates from bicycles and save them in the database.
 \begin{lstlisting}[frame=single]
 $ python2 ./python-api/env/bikeDB/listen.py
 \end{lstlisting}
 
 \section{network protocols and mote insight \%todo: clever sectionname here}\label{sec:insight}
-As the walkthrough only showed how to use the project, this section will show the programs and protocols used for each mote in detail. As all motes are supposed to talk with each other, one superior header file is implemented. It provides easy changeable variables for the maximal amount of bicycles, that can be stolen at once as well as how many gps coordinates are gathered in a single packet as seen in Listing \ref{lst:datamsg}. The gathering process uses the Collection \%TODO quelle protocol. Contrary, the propagation of stolen bicycle \texttt{ID}s is done via the Dissemination protocol. \%TODO quelle again 
+As the walkthrough only showed how to use the project, this section will show the programs and protocols used for each mote in detail. As all motes are supposed to talk with each other, one superior header file is implemented. It provides easy changeable variables for the maximal amount of bicycles, that can be stolen at once as well as how many GPS coordinates are gathered in a single packet as seen in Listing \ref{lst:datamsg}. The gathering process uses the Collection \%TODO quelle protocol. Contrary, the propagation of stolen bicycle \texttt{ID}s is done via the Dissemination protocol. \%TODO quelle again 
 \begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:datamsg]
 //...
 #define MAXBIKES 10
@@ -220,22 +220,19 @@ typedef nx_struct EasyCollectionMsg
 \end{lstlisting}
 Obviously, the content and variable types can be changed easily, too.
 \subsection{Base Station}
-Our base station \texttt{[./nesC/base\_station]} is connected to a computer via USB. On this computer, a \texttt{SerialForwarder} is run in order to establish a possibility to send and receive data to and from the base station. For this project, on the one hand, we have to push \texttt{ID}s of stolen bikes to the base station in order to disseminate them through the network. On the other hand, the collection protocol is implemented to gather information from stolen bikes, like coordinates. This is done via a python script, which can be seen in Listing \ref{lst:listen.py}. In line \%TODO it imports our bikeDB class, which is simply providing methods to read and write to the database.\\
+Our base station \texttt{[./nesC/base\_station]} is connected to a computer via USB. On this computer, a \texttt{SerialForwarder} is run in order to establish a possibility to send and receive data to and from the base station. For this project, on the one hand, we have to push \texttt{ID}s of stolen bikes to the base station in order to disseminate them through the network. On the other hand, the collection protocol is implemented to gather information from stolen bikes, like coordinates. This is done via a python script, which can be seen in Listing \ref{lst:listen.py}. In line 3 it imports our bikeDB class, which is simply providing methods to read and write to the database.\\
 
 \subsection{Network Node}
 The network nodes are completely omittable as they only enlarge the network. More network nodes are needed if a great availability of the network is wanted. These are connected with other network nodes and disseminate and collect the data mentioned already to and from the base station and bicycle motes. Currently, they are doing nothing but disseminating and collecting. However, functionality can be easily added in the \texttt{\path{./nesC/nodes/NodeC.nc}}.
 \subsection{Bicycle Mote}
 Bicycle motes are attached to each bicycle and equipped with a MTS420CC sensorboard including GPS-antenna.\\
-\%TODO picture of stuff\\
 Each of them has a unique identifier (\texttt{ID}), which is used in order to link a mote to a bicycle. On our webview the user is then able to mark his bicycle as stolen. Afterwards, the \texttt{ID} is disseminated through the whole network. If the bicycle approaches a network node, it receives a dissemination packet. These are called "pings". As the bicycle now knows that the network is in range and available, it will check, if its own \texttt{ID} is marked as stolen. If so, the GPS antenna is powered on and starts approximate 90 seconds later to save data (current runtime, latitude, longitude).\\
-After recording data successfully and receiving another ping, the bicycle mote will dump the data into the network using the collection protocol.
+After recording data successfully and receiving another ping, the bicycle mote will dump the data into the network using the collection protocol.\\
 
-\%TODO: kann weg? The amount of data per packet can be easily changed within the \texttt{./nesC/DataMsg.h}, as seen in Listing \ref{lst:datamsg}.
-
-Each mote has a RAM of 8kB. Therefore, it is possible to store 600 coordinate-tuples on the bicycle mote RAM. As we are approximately storing one tuple every 3 minutes, it is possible to store the coordinates of the last 30h. This can be extended by saving onto the measurement flash itself, which we left out for future work, as 30h is enough for all our testcases as well as the battery time is limited due to usage of GPS as well. \%TODO batterien haben 3.4k mAh oder so, gps brauch 70 mAh
+Each mote has a RAM of 8kB. Therefore, it is possible to store 600 coordinate-tuples on the bicycle mote RAM. As we are approximately storing one tuple every 3 minutes, it is possible to store the coordinates of the last 30h. This can be extended by saving onto the measurement flash itself, which we left out for future work, as 30h is enough for all our testcases as well as the battery time is limited due to usage of GPS as well.
 
 \subsection{Topology}
-
+Figure \ref{fig:topo} shows an example topology with one base station, four network nodes and one bicycle mote that is in range of the network. Therefore, it will be able to receive the stolen bicycle \texttt{ID}s and check, if it is marked as stolen.
 \begin{figure}[h!]
 \begin{center}
 \begin{tikzpicture}[node distance=1.5cm]
@@ -286,28 +283,26 @@ Each mote has a RAM of 8kB. Therefore, it is possible to store 600 coordinate-tu
 
 \end{tikzpicture}
 \end{center}
-\caption{Example network showing the protocols used}
+\caption{Example network including protocols used}\label{fig:topo}
 \end{figure}
-- extensible by "nodes"
 
 \section{Conclusion}
 \section{Future Aspects}
 The projects objective is to point out the possibility of a new tracking system using IRIS motes. Therefore, some additions have been left out, as they would not change the procedure, but increase the security, for example. All of these points are explained in this section.
 \begin{enumerate}
-\item \textbf{Privacy and authentication}. Obviously, admins are able to review data of users and mark specific bicycles as stolen, to start the gatherin process. Therefore, the gps data gathered could be encrypted using asymmetric cryptography. The user will receive encrypted data and decrypt it using his private key.
+\item \textbf{Privacy and authentication}. Obviously, admins are able to review data of users and mark specific bicycles as stolen, to start the gatherin process. Therefore, the GPS data gathered could be encrypted using asymmetric cryptography. The user will receive encrypted data and decrypt it using his private key.
 \item \textbf{Encrypted traffic}. Relating to the previous point, the whole traffic of the network, including dissemination of stolen bicycle IDs, should be encrypted to ensure privacy and integrity of packets.
 \item \textbf{Further dissemination of stolen IDs}. Bicycle motes, regardless of their state, can save and disseminate the \texttt{ID}s of stolen bicycles. This way, a bicycle is able to start gathering data without connecting to the network, but to another bicycle. Obviously, one has to take care of synchronicity.
-\item \textbf{Measurement flash}. Instead of just keeping the gathered gps data in the memory, one could save them to the flash of the mote and load them again when receiving a ping of the network. This provides the possibility to store a huge amount of coordinates.
+\item \textbf{Measurement flash}. Instead of just keeping the gathered GPS data in the memory, one could save them to the flash of the mote and load them again when receiving a ping of the network. This provides the possibility to store a huge amount of coordinates.
 \item \textbf{Battery life}. When implementing the previous mentioned point, the battery life has to be extended as well as GPS needs a lot of battery. However, one could use two approaches:
 \begin{enumerate}
 \item A stolen bicycle is going to be used. Therefore, one could power the mote using the energy of a dynamo attached to the bicycle.
-\item At some places, for example a cellar, the gps antenna is not able to maintain a connection. Hence, the gps antenna could be powered off after e.g. 1 minute without connection. Afterwards, start the gps again after a small amount of time and check for connection again.
+\item At some places, for example a cellar, the GPS antenna is not able to maintain a connection. Hence, the GPS antenna could be powered off after e.g. 1 minute without connection. Afterwards, start the GPS again after a small amount of time and check for connection again.
 \end{enumerate}
 \item \textbf{Hiding of the mote}. The thief may not see and be able to remove the mote from the bicycle. So the mote has to be hidden somewhere in the frame of the bicycle without losing signal.
-\item \textbf{GPS exchangeability}. As GPS drains a lot of battery, one could think of implementing a wifi scanner instead of GPS. As wifi is widely used, nearly everywhere wifi networks can be found. Using the \texttt{SSID}s only (without connecting to them) one is able to specify the current location. This obviously consumes less power than gps and will even work, when a bicycle is e.g. in a garage, where a gps antenna will not be able to establish a connection.
+\item \textbf{GPS exchangeability}. As GPS drains a lot of battery, one could think of implementing a wifi scanner instead of GPS. As wifi is widely used, nearly everywhere wifi networks can be found. Using the \texttt{SSID}s only (without connecting to them) one is able to specify the current location. This obviously consumes less power than GPS and will even work, when a bicycle is e.g. in a garage, where a GPS antenna will not be able to establish a connection.
 \end{enumerate}
 
-\%TODO gps VS GPS
 
 \section{Relevant codes passages... just a dump}
 \subsection{base\_station}
@@ -360,7 +355,7 @@ atomic
         current_writing_pos=0;
     call Leds.led0Toggle();
 }   
-//receiving IDs and starting gps if stolen
+//receiving IDs and starting GPS if stolen
 event void Value.changed() 
 {
 uint8_t i;
@@ -380,7 +375,7 @@ for (i=0;i<MAXBIKES;i++)
             call Timer.startOneShot(90000); //wait X/1000 secs
             call GpsControl.start();
         }
-        else if (gps_started==2) //startDone for gps
+        else if (gps_started==2) //startDone for GPS
         {   
             call Leds.led2Toggle();
             //it is stolen AND received a broadcast 
