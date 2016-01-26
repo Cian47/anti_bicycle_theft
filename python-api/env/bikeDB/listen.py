@@ -15,7 +15,6 @@ def send(bDB):
         stolen=bDB.getIdsOfStolen()
         cmd="java net.tinyos.tools.Send "
         pkt="00 FF FF 00 04 %02x FE 2A "
-        #00 01 02 03 04 05 06 04 00 00 00 00 00 00 00 00 00 00 00 00
         packetlength=2
         stolen_str=""
         for b in stolen:
@@ -31,15 +30,6 @@ def send(bDB):
             print("send: {}".format(pkt))
             print(cmd)
             os.system(cmd)
-        #else:
-        #    stolen_str+="FF FF "
-        #    packetlength+=2
-        #    pkt = pkt % packetlength
-        #    pkt = pkt + stolen_str
-        #    cmd = cmd + pkt.upper()
-        #    print("send: {}".format(pkt))
-        #    print(cmd)
-        #    os.system(cmd)
 
         time.sleep(3);
 
@@ -51,7 +41,6 @@ def recv(bDB):
     LENGTH_OF_PACKET=(2+4+4+4)*2 #in nibbles
     while True:
         pkt=p.stdout.readline().strip(" \n\r\t").lower()  #reads until \n
-        #00 00 08 00 1A 22 22 71 00 01 00 05 00 1A 24 EE 00 BF FF AA FF BB 00 00 00 00 03 12 AF BC 00 00 00 00 00 97 CD 2F 00 00 00 00
         pkt=pkt.replace(" ","")
         print("recv: {}".format(pkt))
         if (pkt[30:32]=="ee"): #dissemination ID
@@ -81,7 +70,3 @@ if __name__ == "__main__":
     bDB = bikeDB.BikeDB()
     thread.start_new_thread(send,(bDB,))
     recv(bDB) # blocking
-    #while True:
-    #    time.sleep(1)
-    
-    
