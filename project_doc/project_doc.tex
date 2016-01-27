@@ -88,7 +88,7 @@
 \section{Introduction}
 Bicycle theft is a major concern in many cities. Especially areas that have a high demand for bikes, like university towns, are severly afflicted. In the year 2014 more than 300.000 bikes have been registered as stolen in Germany with many more being stolen but unreported \cite{bka}.\\
 Over the last decade many systems have been developed to prevent bicycle theft or to locate stolen bikes. Most of these systems work by using a GPS module for tracking a bike and a GSM module to communicate the data via the mobile phone network \cite{spybike,golembike}. Another approach is using a Bluetooth transmitter in combination with a bluetooth and GPS equipped smartphone \cite{leash}. The idea is to detect if a stolen bike is close to the mobile phone of any user of the system and use the phones positioning capability to log and communicate its approximate position to the owner.\\
-In this \%TODO paper? paper a new approach is proposed. The system envisioned by the authors is based on sensor beacons equipped with a GPS module and a close range wireless interface. This wireless interface connects though a system of wireless relay nodes to a base station that is connected to the internet. A user of this system will be able to mark a bike as stolen online. This information will then be disseminated from the base station to all relay stations, possible across several hops. As soon as a bike marked as stolen comes in reach of a relay station it will be informed that is has been stolen. This bike will start to continuously capture location information combined with a timestamp and store this information locally. From now on each time the bike comes in reach of a relay station again it will use this station to transmit its stored location data to the base station. From there the tracked positions are made available to the owner via the web interface.\\
+In this project a new approach is proposed. The system envisioned is based on sensor beacons equipped with a GPS module and a close range wireless interface. This wireless interface connects though a system of wireless relay nodes to a base station that is connected to the internet. A user of this system will be able to mark a bike as stolen online. This information will then be disseminated from the base station to all relay stations, possible across several hops. As soon as a bike marked as stolen comes in reach of a relay station it will be informed that is has been stolen. This bike will start to continuously capture location information combined with a timestamp and store this information locally. From now on each time the bike comes in reach of a relay station again it will use this station to transmit its stored location data to the base station. From there the tracked positions are made available to the owner via the web interface.\\
 This system combines advantages of the existing solutions. By using a GPS module exact locations are obtained making it more exact than using the Bluetooth approach. Also, by storing many locations and dumping them via a short range but high speed wireless connection, a very exact movement history can be created. By providing a relaying infrastructure within a certain area (e.g. a small city) the user is not depending on other users using the system (avoiding a hen-egg problem). At the same time there will be no dependency on mobile network providers and therefore fees imposed by them.\\
 
 \section{Environment}
@@ -275,6 +275,8 @@ Figure \ref{fig:topo} shows an example topology with one base station, four netw
 \end{figure}
 
 \section{Conclusion}
+\%TODO !
+
 \section{Future Aspects}
 The projects objective is to point out the possibility of a new tracking system using IRIS motes. Therefore, some additions have been left out, as they would not change the procedure, but increase the security, for example. All of these points are explained in this section.
 \begin{enumerate}
@@ -292,10 +294,10 @@ The projects objective is to point out the possibility of a new tracking system 
 \end{enumerate}
 
 
-\section{Relevant codes passages... just a dump}
-\subsection{base\_station}
+\section{Appendix - relevant code passages}
+\subsection{./nesC/base\_station}
 Receiving stolen bicycle IDs from PC
-\begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:xxx]
+\begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={BaseStationC, reading out stolen bike \texttt{ID}s}, label=lst:xxx,firstnumber=292]
 //...
 for (i=0;i<MAXBIKES;i++)
 {
@@ -306,13 +308,14 @@ for (i=0;i<MAXBIKES;i++)
 
 \subsection{base\_station}
 Receiving stolen bicycle IDs from PC
-\begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:xxx]
+\begin{lstlisting}[breaklines=true, numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:xxx]
 #define MAXPOSITIONS 100
 //...
 uint32_t lons[MAXPOSITIONS];
 uint32_t lats[MAXPOSITIONS];
 uint32_t times[MAXPOSITIONS];
-//reading
+
+//reading coordinates in RAM
 atomic
 {
     for (i=current_reading_pos;i!=current_writing_pos;i++)
@@ -332,7 +335,8 @@ atomic
             break;
     }    
 }
-//writing
+
+//writing coordinates to RAM
 atomic
 {
     lats[current_writing_pos]=(uint32_t)(lat*1000000);
@@ -343,6 +347,7 @@ atomic
         current_writing_pos=0;
     call Leds.led0Toggle();
 }   
+
 //receiving IDs and starting GPS if stolen
 event void Value.changed() 
 {
@@ -384,7 +389,7 @@ if (found==FALSE)
 }
 \end{lstlisting}
 
-\begin{lstlisting}[breaklines=true, numbers=left, frame=single,language=python, captionpos=b, caption={listen.py, ............}, label=lst:listen.py]
+\begin{lstlisting}[breaklines=true, numbers=left, frame=single,language=python, captionpos=b, caption={listen.py, receiving and sending via python2}, label=lst:listen.py]
 import subprocess
 import time
 import bikeDB
@@ -459,11 +464,8 @@ if __name__ == "__main__":
     recv(bDB) # blocking
 \end{lstlisting}
 
-\section{References}
-Dissemination and collection protocols for TinyOS: \url{http://tinyos.stanford.edu/tinyos-wiki/index.php/Network_Protocols}
 
-
-\newpage
+%\newpage
 \section{References}\vspace{-2.5em}
 \renewcommand\refname{}
 %\nocite{pgraph}
