@@ -86,21 +86,10 @@
 \setcounter{page}{1} %nun Seitennummerierung bei eins beginnen
 
 \section{Introduction}
-Bicycle theft is a major concern in many cities. Especially areas that have a high demand for bikes, like university towns, are severly afflicted. In the year 2014 more than 300.000 bikes have been registered as stolen in Germany with many more being stolen but unreported (1).\\
-Over the last decade many systems have been developed to prevent bicycle theft or to locate stolen bikes. Most of these systems work by using a GPS module for tracking a bike and a GSM module to communicate the data via the mobile phone network (2,3). Another approach is using a Bluetooth transmitter in combination with a bluetooth and GPS equipped smartphone (4). The idea is to detect if a stolen bike is close to the mobile phone of any user of the system and use the phones positioning capability to log and communicate its approximate position to the owner.\\
+Bicycle theft is a major concern in many cities. Especially areas that have a high demand for bikes, like university towns, are severly afflicted. In the year 2014 more than 300.000 bikes have been registered as stolen in Germany with many more being stolen but unreported \cite{bka}.\\
+Over the last decade many systems have been developed to prevent bicycle theft or to locate stolen bikes. Most of these systems work by using a GPS module for tracking a bike and a GSM module to communicate the data via the mobile phone network \cite{spybike,golembike}. Another approach is using a Bluetooth transmitter in combination with a bluetooth and GPS equipped smartphone \cite{leash}. The idea is to detect if a stolen bike is close to the mobile phone of any user of the system and use the phones positioning capability to log and communicate its approximate position to the owner.\\
 In this \%TODO paper? paper a new approach is proposed. The system envisioned by the authors is based on sensor beacons equipped with a GPS module and a close range wireless interface. This wireless interface connects though a system of wireless relay nodes to a base station that is connected to the internet. A user of this system will be able to mark a bike as stolen online. This information will then be disseminated from the base station to all relay stations, possible across several hops. As soon as a bike marked as stolen comes in reach of a relay station it will be informed that is has been stolen. This bike will start to continuously capture location information combined with a timestamp and store this information locally. From now on each time the bike comes in reach of a relay station again it will use this station to transmit its stored location data to the base station. From there the tracked positions are made available to the owner via the web interface.\\
 This system combines advantages of the existing solutions. By using a GPS module exact locations are obtained making it more exact than using the Bluetooth approach. Also, by storing many locations and dumping them via a short range but high speed wireless connection, a very exact movement history can be created. By providing a relaying infrastructure within a certain area (e.g. a small city) the user is not depending on other users using the system (avoiding a hen-egg problem). At the same time there will be no dependency on mobile network providers and therefore fees imposed by them.\\
-
-\%TODO: SOURCES\\
-Quellen:
-1: \url{https://www.bka.de/nn_196810/SharedDocs/Downloads/DE/Publikationen/PolizeilicheKriminalstatistik/2014/pks2014ImkBericht.html?__nnn=true}\\
-2:
-\url{http://www.spybike.com/}\\
-3:
-\url{http://www.golem.de/news/bike-spike-GPS-modul-gegen-fahrradklau-1303-98306.html}
-(offizielle website nicht erreichbar)\\
-4:
-\url{https://www.cycleleash.com.au/}\\
 
 \section{Environment}
 Before presenting the project we firstly show what the whole environment looks like. Firstly, IRIS motes\footnote{A full description can be found at \url{http://www.memsic.com/userfiles/files/Datasheets/WSN/IRIS_Datasheet.pdf}} are used (see Figure \ref{fig:mote}). Programs for the motes are written in nesC\footnote{\url{http://www.tinyos.net/api/nesc/doc/ref.pdf}}, compiled and flashed with tinyOS. Additionally, the computer used provides packages mentionend in Section \ref{sec:walkthrough} and is connected to a base station via USB Gateway, which can be seen in Figure \ref{fig:gateway}. Some of the motes are connected to a MTS420CC sensorboard (see Figure \ref{fig:420cc}). A GPS antenna is attached to the sensorboards.\footnote{Figure \ref{fig:mote}, \ref{fig:gateway} and \ref{fig:420cc} have been take from \url{https://user.informatik.uni-goettingen.de/~sensorlab/Hardware.php}}
@@ -144,7 +133,6 @@ Our test environment used the following Linux packages:
 \item python2-pymongo (version 3.2)
 
 \end{enumerate}
-\%TODO: brauch man npm?
 
 \section{Walkthrough}\label{sec:walkthrough}
 This section demonstrates the project without showing technical details, as they will be explained in Section \ref{sec:insight}. 
@@ -199,7 +187,7 @@ $ python2 ./python-api/env/bikeDB/listen.py
 \end{lstlisting}
 
 \section{network protocols and mote insight \%todo: clever sectionname here}\label{sec:insight}
-As the walkthrough only showed how to use the project, this section will show the programs and protocols used for each mote in detail. As all motes are supposed to talk with each other, one superior header file is implemented. It provides easy changeable variables for the maximal amount of bicycles, that can be stolen at once as well as how many GPS coordinates are gathered in a single packet as seen in Listing \ref{lst:datamsg}. The gathering process uses the Collection \%TODO quelle protocol. Contrary, the propagation of stolen bicycle \texttt{ID}s is done via the Dissemination protocol. \%TODO quelle again 
+As the walkthrough only showed how to use the project, this section will show the programs and protocols used for each mote in detail. As all motes are supposed to talk with each other, one superior header file is implemented. It provides easy changeable variables for the maximal amount of bicycles, that can be stolen at once as well as how many GPS coordinates are gathered in a single packet as seen in Listing \ref{lst:datamsg}. The gathering process uses the Collection protocol \cite{colldiss}. Contrary, the propagation of stolen bicycle \texttt{ID}s is done via the Dissemination protocol \cite{colldiss}. 
 \begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:datamsg]
 //...
 #define MAXBIKES 10
@@ -475,14 +463,14 @@ if __name__ == "__main__":
 Dissemination and collection protocols for TinyOS: \url{http://tinyos.stanford.edu/tinyos-wiki/index.php/Network_Protocols}
 
 
-%\newpage
-%\section{References}\vspace{-2.5em}
-%\renewcommand\refname{}
+\newpage
+\section{References}\vspace{-2.5em}
+\renewcommand\refname{}
 %\nocite{pgraph}
 %\nocite{clrs2}
 %\nocite{wiki}
-%\bibliographystyle{plain}
-%\bibliography{src}{}
+\bibliographystyle{plain}
+\bibliography{src}{}
 
 %
 \end{document}
