@@ -51,6 +51,7 @@
 
 \newcommand{\matone}{TODO1}
 \newcommand{\mattwo}{TODO2}
+\newcommand{\mts}{MTS420cc }
 \title{\textbf{Anti Bicycle Theft}\bigskip\\Documentation}
 \author{Kevin Freeman (\matone)\\ Martin Schwarzmaier (\mattwo)\\Georg-August-Universität Göttingen}
 \date{\today}
@@ -92,7 +93,7 @@ In this project a new approach is proposed. The system envisioned is based on se
 This system combines advantages of the existing solutions. By using a GPS module exact locations are obtained making it more exact than using the Bluetooth approach. Also, by storing many locations and dumping them via a short range but high speed wireless connection, a very exact movement history can be created. By providing a relaying infrastructure within a certain area (e.g. a small city) the user is not depending on other users using the system (avoiding a hen-egg problem). At the same time there will be no dependency on mobile network providers and therefore fees imposed by them.\\
 
 \section{Environment}
-Before presenting the project we firstly show what the whole environment looks like. Firstly, IRIS motes\footnote{A full description can be found at \url{http://www.memsic.com/userfiles/files/Datasheets/WSN/IRIS_Datasheet.pdf}} are used (see Figure \ref{fig:mote}). Programs for the motes are written in nesC\footnote{\url{http://www.tinyos.net/api/nesc/doc/ref.pdf}}, compiled and flashed with tinyOS. Additionally, the computer used provides packages mentionend in Section \ref{sec:walkthrough} and is connected to a base station via USB Gateway, which can be seen in Figure \ref{fig:gateway}. Some of the motes are connected to a MTS420CC sensorboard (see Figure \ref{fig:420cc}). A GPS antenna is attached to the sensorboards.\footnote{Figure \ref{fig:mote}, \ref{fig:gateway} and \ref{fig:420cc} have been take from \url{https://user.informatik.uni-goettingen.de/~sensorlab/Hardware.php}}
+Before presenting the project we firstly show what the whole environment looks like. Firstly, IRIS motes\footnote{A full description can be found at \url{http://www.memsic.com/userfiles/files/Datasheets/WSN/IRIS_Datasheet.pdf}} are used (see Figure \ref{fig:mote}). Programs for the motes are written in nesC\footnote{\url{http://www.tinyos.net/api/nesc/doc/ref.pdf}}, compiled and flashed with tinyOS. Additionally, the computer used provides packages mentionend in Section \ref{sec:walkthrough} and is connected to a base station via USB Gateway, which can be seen in Figure \ref{fig:gateway}. Some of the motes are connected to a \mts sensorboard (see Figure \ref{fig:420cc}). A GPS antenna is attached to the sensorboards.\footnote{Figure \ref{fig:mote}, \ref{fig:gateway} and \ref{fig:420cc} have been take from \url{https://user.informatik.uni-goettingen.de/~sensorlab/Hardware.php}}
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=0.75]{pics/mote.jpg}
@@ -115,7 +116,7 @@ Before presenting the project we firstly show what the whole environment looks l
 \begin{minipage}{0.47\textwidth}
 \begin{center}
 \includegraphics[scale=0.5]{pics/420cc.jpg}
-\caption{MTS420CC sensorboard, able to process GPS signals.}
+\caption{\mts sensorboard, able to process GPS signals.}
 \label{fig:420cc}
 \end{center}
 \end{minipage}
@@ -137,10 +138,10 @@ Our test environment used the following Linux packages:
 \section{Walkthrough}\label{sec:walkthrough}
 This section demonstrates the project without showing technical details, as they will be explained in Section \ref{sec:insight}. 
 \subsection{Flashing the motes}
-In order to make this project work, at least one IRIS mote as a base station as well as one iris mote equipped with a MTS420CC board including a GPS antenna are needed. Each additional bicycle will need the same sensorboard and GPS antenna. Additionally, it is possible to extend the network range with extra motes. This brings us to the following amount of needed motes:
+In order to make this project work, at least one IRIS mote as a base station as well as one iris mote equipped with a \mts board including a GPS antenna are needed. Each additional bicycle will need the same sensorboard and GPS antenna. Additionally, it is possible to extend the network range with extra motes. This brings us to the following amount of needed motes:
 \begin{enumerate}
 \item[a)] one base station \texttt{[./nesC/base\_station]}
-\item[b)] one MTS420CC sensorboard with GPS antenna per bicycle \texttt{[./nesC/bike]}
+\item[b)] one \mts sensorboard with GPS antenna per bicycle \texttt{[./nesC/bike]}
 \item[c)] any amount of network node motes \texttt{[./nesC/nodes]}
 \end{enumerate}
 \subsection{Starting MongoDB, NodeJS and SerialForwarder}
@@ -213,7 +214,7 @@ Our base station \texttt{[./nesC/base\_station]} is connected to a computer via 
 \subsection{Network Node}
 The network nodes are completely omittable as they only enlarge the network. More network nodes are needed if a great availability of the network is wanted. These are connected with other network nodes and disseminate and collect the data mentioned already to and from the base station and bicycle motes. Currently, they are doing nothing but disseminating and collecting. However, functionality can be easily added in the \texttt{\path{./nesC/nodes/NodeC.nc}}.
 \subsection{Bicycle Mote}
-Bicycle motes are attached to each bicycle and equipped with a MTS420CC sensorboard including GPS-antenna.\\
+Bicycle motes are attached to each bicycle and equipped with a \mts sensorboard including GPS-antenna.\\
 Each of them has a unique identifier (\texttt{ID}), which is used in order to link a mote to a bicycle. On our webview the user is then able to mark his bicycle as stolen. Afterwards, the \texttt{ID} is disseminated through the whole network. If the bicycle approaches a network node, it receives a dissemination packet. These are called "pings". As the bicycle now knows that the network is in range and available, it will check, if its own \texttt{ID} is marked as stolen. If so, the GPS antenna is powered on and starts approximate 90 seconds later to save data (current runtime, latitude, longitude).\\
 After recording data successfully and receiving another ping, the bicycle mote will dump the data into the network using the collection protocol.\\
 
