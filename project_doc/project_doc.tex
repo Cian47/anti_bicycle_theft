@@ -276,7 +276,16 @@ Figure \ref{fig:topo} shows an example topology with one base station, four netw
 \end{figure}
 
 \section{Evaluation and Conclusion}
-\%TODO !
+The project was tested several times by flashing the programs onto different motes. All components are working as described and fine. Motes were marked as stolen via the website. The stolen \texttt{ID}s were disseminated without problems. Afterwards, corresponding bicycle motes started to record data. Even if the the network has been left for some time, the recorded data was collected successfully after entering the network again. This data is correctly shown on the webpage as shown in Figure \ref{fig:concl}. However, the GPS antenna may lose the signal and therefore returns faulty coordinates. These are omitted upon receival at the base station (line 64 of Listing \ref{lst:listen.py}).
+All in all the project approach is working very fine and is able to run long enough to gain necessary information, e.g. where the bicycle is placed at night (this might be the living place of the thief). The sole disadvantage is great power consumption by the GPS module. To eliminate this disadvantage, it is possible to load the battery while cycling or use, for example, solar energy. Furthermore, the gps antenna could be powered off if the same coordinates are received for a certain period of time. These aspects are presented in the next section.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.35]{pics/concl.png}
+\caption{Captured packets after walking outside.}
+\label{fig:concl}
+\end{center}
+\end{figure}
 
 \section{Future Aspects}
 The projects objective is to point out the possibility of a new tracking system using IRIS motes. Therefore, some additions have been left out, as they would not change the procedure, but increase the security, for example. All of these points are explained in this section.
