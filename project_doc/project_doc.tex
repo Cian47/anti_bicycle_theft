@@ -187,7 +187,7 @@ Afterwards, only the \texttt{listen.py} has to be run, which imports our \texttt
 $ python2 ./python-api/env/bikeDB/listen.py
 \end{lstlisting}
 
-\section{network protocols and mote insight \%todo: clever sectionname here}\label{sec:insight}
+\section{Network Protocols and Mote Insight}\label{sec:insight}%TODO: clever sectionname here
 As the walkthrough only showed how to use the project, this section will show the programs and protocols used for each mote in detail. As all motes are supposed to talk with each other, one superior header file is implemented. It provides easy changeable variables for the maximal amount of bicycles, that can be stolen at once as well as how many GPS coordinates are gathered in a single packet as seen in Listing \ref{lst:datamsg}. The gathering process uses the Collection protocol \cite{colldiss}. Contrary, the propagation of stolen bicycle \texttt{ID}s is done via the Dissemination protocol \cite{colldiss}. 
 \begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:datamsg]
 //...
