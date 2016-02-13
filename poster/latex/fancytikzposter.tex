@@ -10,6 +10,62 @@
 
 \usepackage{fancytikzposter} 
 
+\usepackage[utf8]{inputenc}
+\usepackage{hyphsubst}
+%\HyphSubstIfExists{ngerman-x-latest}{
+%  \HyphSubstLet{ngerman}{ngerman-x-latest}}{}
+%\HyphSubstIfExists{german-x-latest}{
+%  \HyphSubstLet{german}{german-x-latest}}{}
+\usepackage{zi4}
+\usepackage{amsmath} %for matrices
+\usepackage{amssymb} %for element of N / R etc
+\usepackage{amsthm} % proof
+\usepackage[english]{babel} % Beweis etc
+\newcounter{theorems}
+\usepackage{natbib} % cites
+\usepackage{hyperref}
+
+%\usepackage{mdframed}
+\usepackage{enumerate}
+%\usepackage[hyphenbreaks]{breakurl}
+
+\usepackage{graphicx} %\includegraphics
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,patterns}
+\usetikzlibrary{shapes}
+\usetikzlibrary{arrows}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{positioning,automata} 
+\usepackage[all]{xy}
+\usepackage{float}
+\usepackage{color}
+\usepackage{soul} %ul etc
+\definecolor{darkgreen}{rgb}{0.0,0.5,0.0}
+\definecolor{darkred}{rgb}{0.5,0.0,0.0}
+\definecolor{darkyellow}{rgb}{0.5,0.5,0.0}
+\definecolor{lightgreen}{rgb}{0.5,1,0.5}
+\definecolor{lightgreen2}{rgb}{0.7,0.9,0.7}
+
+\newcommand{\cfbox}[2]{%
+    \colorlet{currentcolor}{.}%
+    {\color{#1}%
+    \fbox{\color{currentcolor}#2}}%
+}
+
+\usepackage{listings}
+\usepackage{nth}
+%\lstset{numbers=left,language=C,frame=lines,commentstyle=\color{darkgreen}\ttfamily,keywordstyle=\color{blue},mathescape,basicstyle=\ttfamily\scriptsize}
+
+\newtheorem{ex}{Example}
+\newtheorem*{ex*}{Example}
+\newtheorem*{exS}{Example \cite{thwart}}
+
+\newcommand{\matone}{TODO1}
+\newcommand{\mattwo}{TODO2}
+\newcommand{\mts}{MTS420cc }
+\title{\textbf{Anti Bicycle Theft}\bigskip\\Documentation}
+\author{Kevin Freeman (\matone)\\ Martin Schwarzmaier (\mattwo)\\Georg-August-Universität Göttingen}
+\date{\today}
 
 %%%%% --------- Change here if you want ---------- %%%%%
 %% margin for the geometry package, must be changed before using the geometry package
@@ -196,63 +252,88 @@ A tracking GPS module that can be turned on when a bike has been stolen, tracks 
   %% box is the alias of the previous block, so we can refer to its boundaries
 
   %%%%%%%%%% ------------------------------------------ %%%%%%%%%%
-  \blocknode{Making Title}%
-  {To make title, use the standard commands \textbackslash title and
-    \textbackslash author in the preamble, and then the following macro:
-    \begin{itemize}
-    \item[] \textbackslash titleblock\{50\}\{1.5\}
-    \end{itemize}
-    Macro \textbackslash titleblock has three parameters. The first one is
-    optional and it specifies the shift of the title block w.r.t.\ its default
-    position, which is set to (\$0.5*(0,\textbackslash
-    paperheight)-(0,\textbackslash margin)\$). The second parameter is the width
-    of the title block, and the third parameter is the scaling ratio (to make
-    the title bigger or smaller).\\
+  \blocknode{Used hardware / environment / Software}%
+  {
+The system we proposed an implemented prototypically allows a user to remotely turn on a location tracking device, collect data over extended periods of time. This works even if his bike is not in range of a network after it has been activated. Using a easy to use webinterface bikes and be quickly reported as stolen and location data can be conveniently displayed on a digital map.\\
+Future work is needed to determine how battery usage can be minimized (e.g. by replacing GPS with WiFi positioning) and whether a sufficient relay network can be established at reasonable costs.  
+  
+  
+  }
+  
+  %%%%%%%%%% ------------------------------------------ %%%%%%%%%%
+  \blocknode{System Description}%
+  {
 
-    \small
-    The syntax for specifying authors is similar to the one in aaai.sty.  Author
-    information can be set in various styles: For several authors from the same
-    institution:
-    \begin{itemize}\item[] 
-      \textbackslash author\{Author 1 \textbackslash and ... \textbackslash and
-      Author n \textbackslash\textbackslash\\ 
-      Address line \textbackslash\textbackslash \
-      ... \textbackslash\textbackslash \ Address line\}
-    \end{itemize}
+The system consits of a PC running a webserver, a iris mote connected to the PC via USB, a set of relay IRIS motes and so called bike iris motes. The process begins with a user marking his bike as stolen using the system‘s webapp using an ID. The webserver will relay this ID to the basestation which broadcasts it to all relay motes via dissemination. When a bike passes a relay mote it will establish a connection and check whether its ID was disseminated. If this was the case the bike mote will turn on its GPS module and start recording its position in combination with a timestamp.\\
+The next time the bike passes a relay mote the position data will be transfered, collected at the base station and made available to the user on the webapp
+  
+  
+  }
+  
+  %%%%%%%%%% ------------------------------------------ %%%%%%%%%%
+  \blocknode{Topology}%
+  {
 
-    If the names do not fit well on one line use
-    \begin{itemize}\item[] 
-      \textbackslash author\{Author 1 \textbackslash\textbackslash \
-      \{\textbackslash bf Author 2\} \textbackslash\textbackslash \
-      ... \textbackslash\textbackslash \
-      \{\textbackslash bf Author n\} \textbackslash\textbackslash\\
-      Address line \textbackslash\textbackslash \
-      ... \textbackslash\textbackslash \ Address line\}
-    \end{itemize}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
 
-    For authors from different institutions: 
-    \begin{itemize}\item[] 
-      \textbackslash author\{Author 1 \textbackslash\textbackslash \ Address
-      line \textbackslash\textbackslash \ ... \textbackslash\textbackslash \
-      Address line \\ \textbackslash And ... \textbackslash And \\
-      Author n \textbackslash\textbackslash \ Address line
-      \textbackslash\textbackslash \ ... \textbackslash\textbackslash \ Address
-      line\}
-    \end{itemize}
-    
-    To start a separate ``row'' of authors use \textbackslash AND, as in
-    \begin{itemize}\item[] 
-      \textbackslash author\{Author 1 \textbackslash\textbackslash \ Address line
-      \textbackslash\textbackslash \ ... \textbackslash\textbackslash \ Address
-      line \textbackslash AND\\ Author 2 \textbackslash\textbackslash \ Address line
-      \textbackslash\textbackslash \ ... \textbackslash\textbackslash \ Address
-      line \textbackslash And\\ Author 3 \textbackslash\textbackslash \ Address line
-      \textbackslash\textbackslash \ ... \textbackslash\textbackslash \ Address
-      line\}
-    \end{itemize}
-    (though, I must say \textbackslash and ... \textbackslash and did not work for
-    me with more than 2 authors, so just use commas where you need if it does
-    not work for you either).
+%CLOUD
+\node [cloud, draw,cloud puffs=10,cloud puff arc=120, aspect=2, inner ysep=1em](cl) at (-0.3,4) {Internet};
+
+\node[ellipse, draw, thick, fill=blue!20](bs) at (-1,2){Base Station};
+
+\node[circle, draw, thick, fill=blue!20](n1) at (0,0){Node$_1$} ;
+\node[circle, draw, thick, fill=blue!20, right = of n1](n2){Node$_2$};
+\node[strike out, draw,rotate=-50,ultra thick, fill=blue!20] at (2,-1.5){obstacle};
+\node[circle, draw, thick, fill=blue!20](n3) at (1,-3){Node$_3$};
+\node[circle, draw, thick, fill=blue!20](n4) at (4,-3.5){Node$_4$};
+
+\node[rotate=0](bike) at (-1,-4){\includegraphics[width=.1\textwidth]{bike.png}};
+
+\draw[->, arrows={Triangle-Triangle}] (bs) -- (cl);
+\node at (-0.4,2.75){PC} ;
+
+\draw[->, arrows={-Triangle}, draw=red, transform canvas={xshift = 0.05cm}] (bs) -- (n1);
+\draw[->, arrows={-Triangle}, draw=green, transform canvas={xshift = -0.05cm}] (n1) -- (bs);
+
+\draw[->, arrows={-Triangle}, draw=red, transform canvas={xshift = 0.05cm}] (n1) -- (n3);
+\draw[->, arrows={-Triangle}, draw=green, transform canvas={xshift = -0.05cm}] (n3) -- (n1);
+
+\draw[->, arrows={-Triangle}, draw=red, transform canvas={yshift = 0.05cm}] (n1) -- (n2);
+\draw[->, arrows={-Triangle}, draw=green, transform canvas={yshift = -0.05cm}] (n2) -- (n1);
+
+\draw[->, arrows={-Triangle}, draw=red, transform canvas={xshift = 0.05cm}] (n2) -- (n4);
+\draw[->, arrows={-Triangle}, draw=green, transform canvas={xshift = -0.05cm}] (n4) -- (n2);
+
+\draw[->, arrows={-Triangle}, draw=red, transform canvas={yshift = 0.05cm}] (n3) -- (n4);
+\draw[->, arrows={-Triangle}, draw=green, transform canvas={yshift = -0.05cm}] (n4) -- (n3);
+
+\draw[->, arrows={Triangle-}, draw=red, transform canvas={yshift = 0.05cm}] (n3) -- (-0.5,-3.75);
+\draw[->, arrows={Triangle-}, draw=green, transform canvas={yshift = -0.05cm}] (-0.5,-3.75) -- (n3);
+
+\filldraw[color=green] (3-1,2+0.5) rectangle (3.5-1,2.5+0.5);
+\node at (4.375-1,2.25+0.5)  {Collection};
+\filldraw[color=red] (3-1,1.5+0.5) rectangle (3.5-1,2.0+0.5);
+\node at (4.7-1,1.75+0.5)  {Dissemination};
+\filldraw[color=black] (3-1,1.0+0.5) rectangle (3.5-1,1.5+0.5);
+\node at (4.85-1,1.25+0.5)  {SerialForwarder};
+
+
+
+
+\end{tikzpicture}
+\end{center}
+%\caption{Example network including protocols used}\label{fig:topo}
+
+  
+  }  
+  %%%%%%%%%% ------------------------------------------ %%%%%%%%%%
+  \blocknode{Conclusion}%
+  {
+The system we proposed an implemented prototypically allows a user to remotely turn on a location tracking device, collect data over extended periods of time. This works even if his bike is not in range of a network after it has been activated. Using a easy to use webinterface bikes and be quickly reported as stolen and location data can be conveniently displayed on a digital map.\\
+Future work is needed to determine how battery usage can be minimized (e.g. by replacing GPS with WiFi positioning) and whether a sufficient relay network can be established at reasonable costs.  
+  
+  
   }
   
 
