@@ -49,8 +49,8 @@
 \newtheorem*{ex*}{Example}
 \newtheorem*{exS}{Example \cite{thwart}}
 
-\newcommand{\matone}{TODO1}
-\newcommand{\mattwo}{TODO2}
+\newcommand{\matone}{21152466}
+\newcommand{\mattwo}{21166929}
 \newcommand{\mts}{MTS420cc }
 \title{\textbf{Anti Bicycle Theft}\bigskip\\Documentation}
 \author{Kevin Freeman (\matone)\\ Martin Schwarzmaier (\mattwo)\\Georg-August-Universität Göttingen}
@@ -157,21 +157,21 @@ Additionally, the MongoDB daemon has to be started:
 Now the user is able to register to the webservice and mark his bicycles as stolen them already as shown in Figure \ref{fig:webregistration} and \ref{fig:mark}. Once GPS data is collected, he is able to review this on the same webpage, as seen in Figure \ref{fig:GPSdata}.
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[scale=0.3]{pics/reg.png}
+\includegraphics[keepaspectratio=false, width=12cm, height=8cm]{pics/reg.png}
 \end{center}
 \caption{Registration website}
 \label{fig:webregistration}
 \end{figure}
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.3]{pics/mark.png}
+\includegraphics[keepaspectratio=false, width=12cm, height=5cm]{pics/mark.png}
 \end{center}
 \caption{Viewing registered bikes}
 \label{fig:mark}
 \end{figure}
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.3]{pics/view.png}
+\includegraphics[keepaspectratio=false, width=12cm, height=7cm]{pics/view.png}
 \end{center}
 \caption{Viewing gathered GPS coordinates}
 \label{fig:GPSdata}
@@ -188,7 +188,7 @@ $ python2 ./python-api/env/bikeDB/listen.py
 \end{lstlisting}
 
 \section{Network Protocols and Mote Insight}\label{sec:insight}%TODO: clever sectionname here
-As the walkthrough only showed how to use the project, this section will show the programs and protocols used for each mote in detail. As all motes are supposed to talk with each other, one superior header file is implemented. It provides easy changeable variables for the maximal amount of bicycles, that can be stolen at once as well as how many GPS coordinates are gathered in a single packet as seen in Listing \ref{lst:datamsg}. The gathering process uses the Collection protocol \cite{colldiss}. Contrary, the propagation of stolen bicycle \texttt{ID}s is done via the Dissemination protocol \cite{colldiss}. 
+As the walkthrough only showed how to use the project, this section shows programs and protocols used for each mote in detail. As all motes are supposed to talk with each other, one superior header file is implemented. It provides easy changeable variables for the maximal amount of bicycles, that can be stolen at once as well as how many GPS coordinates are gathered in a single packet as seen in Listing \ref{lst:datamsg}. The gathering process uses the Collection protocol \cite{colldiss}. Contrary, the propagation of stolen bicycle \texttt{ID}s is done via the Dissemination protocol \cite{colldiss}. 
 \begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:datamsg]
 //...
 #define MAXBIKES 10
