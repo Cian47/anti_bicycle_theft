@@ -294,8 +294,8 @@ A tracking GPS module that can be turned on after a bike has been stolen, tracks
   \blocknode{System Description}%
   {
 
-The system consists of a computer running a webserver, an IRIS mote connected to the it via USB, a set of relay IRIS motes and so called bicycle IRIS motes. The process begins after a user marked his bike as stolen using the system's webapplication using an \texttt{ID}. The webserver will relay this \texttt{ID} to the basestation which broadcasts it to all relay motes via dissemination\cite{colldiss}. When a bike passes a relay mote it establishes a connection and checks whether its \texttt{ID} is being disseminated. If this is the case the bicycle mote will turn on its GPS module and start recording its position in combination with a timestamp.\\
-The next time the bike passes a relay mote the position data is transfered, collected\cite{colldiss} at the base station and made available to the user on the webapplication.
+The system consists of a computer running a webserver, an IRIS mote connected to the it via USB, a set of relay IRIS motes and so called bicycle IRIS motes. The process begins after a user marked his bike as stolen using the system's web application using an \texttt{ID}. The webserver will relay this \texttt{ID} to the basestation which broadcasts it to all relay motes via dissemination\cite{colldiss}. When a bike passes a relay mote it establishes a connection and checks whether its \texttt{ID} is being disseminated. If this is the case the bicycle mote will turn on its GPS module and start recording its position in combination with a timestamp.\\
+The next time the bike passes a relay mote the position data is transfered, collected\cite{colldiss} at the base station and made available to the user on the web application.
 
 \vspace{0.5cm}
 \begin{center}
