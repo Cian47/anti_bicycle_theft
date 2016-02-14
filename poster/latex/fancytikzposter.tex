@@ -212,7 +212,7 @@
   {Introduction}%
   {
 Bicycle theft is a major problem in many cities, especially university towns.
-Our aim was to create a system that enables a bike owner to track a stolen bike. While other systems already on the market are trying to accomplish this by using GSM modules we chose to use a minimalistic approach:\\
+Our aim was to create a system that enables a bike owner to track a stolen bike. While other systems already on the market are trying to accomplish this by using GSM modules we tried to use a minimalistic approach:\\
 A tracking GPS module that can be turned on after a bike has been stolen, tracks positions and retransmits them to the user via a short distance wireless interface and represents them on an easy-to-use web interface.\\
 \begin{center}
 \includegraphics[scale=0.85]{../../project_doc/pics/reg.png}  
@@ -262,6 +262,7 @@ A tracking GPS module that can be turned on after a bike has been stolen, tracks
 \begin{enumerate}
 \item Linux with TinyOS
 \item NodeJS with Express
+\item Python and Java
 \item MongoDB
 \item TinyOS Protocols (Dissemination \& Collection \cite{colldiss})
 \end{enumerate}
@@ -293,8 +294,8 @@ A tracking GPS module that can be turned on after a bike has been stolen, tracks
   \blocknode{System Description}%
   {
 
-The system consists of a computer running a webserver, an IRIS mote connected to the it via USB, a set of relay IRIS motes and so called bicycle IRIS motes. The process begins after a user marked his bike as stolen through the system's web application using an \texttt{ID}. The webserver will relay this \texttt{ID} to the basestation which broadcasts it to all relay motes via dissemination\cite{colldiss}. When a bike passes a relay mote it establishes a connection and checks whether its \texttt{ID} has been disseminated. If this is the case the bicycle mote will turn on its GPS module and start recording its position in combination with a timestamp.\\
-The next time the bike passes a relay mote the position data is transfered and collected\cite{colldiss} at the base station and made available to the user on the web application.
+The system consists of a computer running a webserver, an IRIS mote connected to the it via USB, a set of relay IRIS motes and so called bicycle IRIS motes. The process begins after a user marked his bike as stolen using the system's webapplication using an \texttt{ID}. The webserver will relay this \texttt{ID} to the basestation which broadcasts it to all relay motes via dissemination\cite{colldiss}. When a bike passes a relay mote it establishes a connection and checks whether its \texttt{ID} is being disseminated. If this is the case the bicycle mote will turn on its GPS module and start recording its position in combination with a timestamp.\\
+The next time the bike passes a relay mote the position data is transfered, collected\cite{colldiss} at the base station and made available to the user on the webapplication.
 
 \vspace{0.5cm}
 \begin{center}
@@ -327,7 +328,7 @@ The next time the bike passes a relay mote the position data is transfered and c
   %%%%%%%%%% ------------------------------------------ %%%%%%%%%%
   \blocknode{Conclusion}%
   {
-The system we proposed and implemented prototypically allows a user to remotely turn on a location tracking device and collect data over extended periods of time. This works even if his bike is not in range of a network after it has been activated. Using an easy-to-use webinterface bicycles can be quickly reported as stolen. Gathered location data can be conveniently displayed on a digital map.\\
+The system we proposed an implemented prototypically allows a user to remotely turn on a location tracking device, collect data over extended periods of time. This works even if his bike is not in range of a network after it has been activated. Using an easy-to-use webinterface bicycles are able to be quickly reported as stolen. Gathered location data can be conveniently displayed on a digital map.\\
 
 \begin{center}
 \includegraphics[scale=0.94]{../../project_doc/pics/concl.png}  
