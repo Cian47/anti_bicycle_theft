@@ -154,10 +154,10 @@ Additionally, the MongoDB daemon has to be started:
 \begin{lstlisting}[frame=single,language=bash]
 # mongod
 \end{lstlisting}
-Now the user is able to register to the webservice and mark his or her bicycles as stolen as shown in Figure \ref{fig:webregistration} and \ref{fig:mark}. Once GPS data is collected, the user is able to view it on using the same webapp, as seen in Figure \ref{fig:GPSdata}.
+Now the user is able to register to the webservice and mark his or her bicycles as stolen as shown in Figure \ref{fig:webregistration} and \ref{fig:mark}. Once GPS data is collected, the user is able to view it using the same web application, as seen in Figure \ref{fig:GPSdata}.
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[keepaspectratio=false, width=12cm, height=8cm]{pics/reg.png}
+\includegraphics[keepaspectratio=false, width=12cm, height=6cm]{pics/reg.png}
 \end{center}
 \caption{Registration website}
 \label{fig:webregistration}
@@ -290,7 +290,7 @@ All in all the project approach is working very well and is able to run long eno
 \section{Future Aspects}
 The projects objective is to point out the possibility of a new tracking system using IRIS motes. Therefore, some additions have been left out, as they would not change the procedure, but increase the security, for example. All of these points are explained in this section.
 \begin{enumerate}
-\item \textbf{Privacy and authentication}. Obviously, administrators of the webapp are able to access data of users and mark specific bicycles as stolen, to start the gathering process. Therefore, the GPS data gathered could be encrypted using asymmetric cryptography. The user will receive encrypted data and decrypt it using a private key.
+\item \textbf{Privacy and authentication}. Obviously, administrators of the web application are able to access data of users and mark specific bicycles as stolen, to start the gathering process. Therefore, the GPS data gathered could be encrypted using asymmetric cryptography. The user will receive encrypted data and decrypt it using a private key.
 \item \textbf{Encrypted traffic}. Relating to the previous point, the whole traffic of the network, including dissemination of stolen bicycle \texttt{ID}s, should be encrypted to ensure privacy and integrity of packets.
 \item \textbf{Further dissemination of stolen IDs}. Bicycle motes, regardless of their state, could save and disseminate the \texttt{ID}s of stolen bicycles. This way, a bicycle would be able to start gathering data without connecting to the relay network, but to another bicycle. Obviously, one has to take care of synchronicity in this case.
 \item \textbf{Measurement flash}. Instead of just keeping the gathered GPS data in the memory, one could save them to the flash of the mote and load them again when receiving a ping of the network. This provides the possibility to store a huge amount of coordinates.
@@ -304,10 +304,11 @@ The projects objective is to point out the possibility of a new tracking system 
 \end{enumerate}
 
 
-\section{Appendix - relevant code passages}
+\newpage
+\section{Appendix}
 \subsection{./nesC/base\_station}
 Receiving stolen bicycle IDs from PC
-\begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={BaseStationC, reading out stolen bike \texttt{ID}s}, label=lst:xxx,firstnumber=292]
+\begin{lstlisting}[numbers=left, frame=single,language=C, captionpos=b, caption={BaseStationC.nc, reading out stolen bike \texttt{ID}s}, label=lst:xxx,firstnumber=292]
 //...
 for (i=0;i<MAXBIKES;i++)
 {
@@ -316,9 +317,9 @@ for (i=0;i<MAXBIKES;i++)
 //...
 \end{lstlisting}
 
-\subsection{base\_station}
-Receiving stolen bicycle IDs from PC
-\begin{lstlisting}[breaklines=true, numbers=left, frame=single,language=C, captionpos=b, caption={DataMsg.h, content of packets}, label=lst:xxx]
+\subsection{./nesC/bike}
+Gathering coordinates via GPS module
+\begin{lstlisting}[breaklines=true, numbers=left, frame=single,language=C, captionpos=b, caption={BikeC.nc, gathering of coordinates}, label=lst:xxx]
 #define MAXPOSITIONS 100
 //...
 uint32_t lons[MAXPOSITIONS];
@@ -399,6 +400,8 @@ if (found==FALSE)
 }
 \end{lstlisting}
 
+\subsection{./python-api/env/bikeDB}
+Using the SerialForwarder with python as well as reading out the MongoDB
 \begin{lstlisting}[breaklines=true, numbers=left, frame=single,language=python, captionpos=b, caption={listen.py, receiving and sending via python2}, label=lst:listen.py]
 import subprocess
 import time
@@ -475,6 +478,7 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 
+\newpage
 %\newpage
 \section{References}\vspace{-2.5em}
 \renewcommand\refname{}
